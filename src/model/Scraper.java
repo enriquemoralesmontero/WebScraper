@@ -16,36 +16,66 @@ import objects.RegistryList;
  * @version 28/3/2019
  */
 public class Scraper {
-		
-	private static Document doc;
 	
 	/**
+	 * This is the most important function of the scraper.
+	 * It is responsible for the following features:
 	 * 
+	 * <p>	1 - Instance a list.													</p>
+	 * <p>	2 - Check that the connection code to the web page is correct (200).	</p>
+	 * <p>	3 - Get the HTML document.												</p>
+	 * <p>	4 - Treats the rows of the HTML table.									</p>
+	 * <p>	5 - Instance a web crawler to enter the hyperlinks.						</p>
+	 * <p>	6 - Loop to extract data from the rows.									</p>
+	 * <p>		</p>
+	 * <p>		</p>
+	 * <p>		</p>
 	 * 
 	 * @param webURL - Text string with the URL of the web page.
 	 * @param lastUrlInfoContext 
 	 */
 	public static RegistryList getListOfInfoCNMV(final String webURL, final String lastUrlInfoContext) {
 		
-		RegistryList list = new RegistryList();				// List of scraped data.
+		// 1 - Instanced list.
 		
-		System.out.println("\n\tThis task may take a while...");
+		RegistryList list = new RegistryList();		// List of scraped data.
 		
-		if (getStatusConnectionCode(webURL) == 200) {		// It checks if the code is 200 when making the request.
+		// 2 - Checking the connection code.
+		// It checks if the code is 200 when making the request.
+		// If there is a bad connection to the website, it will give a code other than 200 (400, 404...)
+		
+		System.out.println("\n\tThis task may take a while.");
+		
+		if (getStatusConnectionCode(webURL) == 200) {		
 
-			Document document = getHtmlDocument(webURL); 	// The HTML of the web is obtained in a Document object.
+			// 3 - Getting the HTML document.
+			// The HTML of the web is obtained in a Document object.
+			
+			Document document = getHtmlDocument(webURL); 	
 
+			// 4 - Treats the rows of the HTML table.
+			// First essential work of web scraping!
+			// The first elements to be treated are the rows of the HTML table of the web page.
 			// Searching for data...
             		
-            Elements entradas = document.select("tr"); 
-            System.out.println("\n\tElements: " + entradas.size() + " registries.");
+            Elements rows = document.select("tr"); 	// Rows obtained.
+            System.out.println("\n\tElements: " + rows.size() + " registries.");
             
-            // Loop of elements.            
+            // 5 - Instantiate the web crawler.
+            // The web spider will be used to enter the hypertext links.
+            // This will continue the data collection within them.
             
-            for (int i = 1; i < entradas.size(); i++) {
+            Crawler spiderBot = new Crawler();
+            
+            // 6 - Loop to extract data from the rows.
+            // For each column taken, data is collected.
+            // It is not necessary to control all the rows.
+            // The loop will be exited if the records found have already been previously inserted in the database.
+            
+            for (int i = 1; i < rows.size(); i++) {
             	
-            	System.out.print("\n\t\tScanning " + i + "/" + entradas.size());
-    			Element element = entradas.get(i);
+            	System.out.print("\n\t\t- Scanning... " + i + "/" + rows.size());
+    			Element element = rows.get(i);
 
     			// Getting data.
     			
@@ -55,16 +85,16 @@ public class Scraper {
     			String entityName = element.getElementsByAttributeValue("data-th", "Nombre del emisor").text();
     			
     			if (url_info_context.equals(lastUrlInfoContext)) {
-    				System.out.println(" - This record matches the last one in the database. Finishing the scraping...");
+    				System.out.println(" [This record matches the last one in the database] - Finishing the scraping...");
     				break;
     			}
     			
-    			doc = getHtmlDocument(url_info_context);
+    			spiderBot.setDocHMTL(getHtmlDocument(url_info_context));
     			
-    			String url_ixbrl = crawlerGetAttrValue("ctl00_ContentPrincipal_ctl11_hlDescargaInforme", "href").replace("..", "http://cnmv.es/Portal");
-    			String entityCode = crawlerGetPlainText("ctl00_ContentPrincipal_ctl10_lblNIFCont");  			
-    			String period_end = crawlerGetPlainText("ctl00_ContentPrincipal_ctl10_lblFinPeriodoCont");
-    			String form = crawlerGetPlainText("ctl00_ContentPrincipal_ctl11_txtInfoXBRL").replaceAll("El informe ha sido elaborado basándose en la taxonomía ", "").replace(".", "");
+    			String url_ixbrl = spiderBot.getAttrValue("ctl00_ContentPrincipal_ctl11_hlDescargaInforme", "href").replace("..", "http://cnmv.es/Portal");
+    			String entityCode = spiderBot.getPlainText("ctl00_ContentPrincipal_ctl10_lblNIFCont");  			
+    			String period_end = spiderBot.getPlainText("ctl00_ContentPrincipal_ctl10_lblFinPeriodoCont");
+    			String form = spiderBot.getPlainText("ctl00_ContentPrincipal_ctl11_txtInfoXBRL").replaceAll("El informe ha sido elaborado basándose en la taxonomía ", "").replace(".", "");
     			String format = "XBRL";
     			String hash_code = "";
     			String oam = "CNMV";
@@ -75,18 +105,18 @@ public class Scraper {
     			
     			if (url_ixbrl == "NULL") {
     				System.out.print(" .");
-    				url_ixbrl = crawlerGetAttrValue("ctl00_ContentPrincipal_ctl12_hlDescargaInforme", "href").replace("..", "http://cnmv.es/Portal");
-    				entityCode = crawlerGetPlainText("ctl00_ContentPrincipal_ctl11_lblNIFCont");
-    				period_end = crawlerGetPlainText("ctl00_ContentPrincipal_ctl11_lblFinPeriodoCont");
-    				form = crawlerGetPlainText("ctl00_ContentPrincipal_ctl12_txtInfoXBRL").replaceAll("El informe ha sido elaborado basándose en la taxonomía ", "").replace(".", "");
+    				url_ixbrl = spiderBot.getAttrValue("ctl00_ContentPrincipal_ctl12_hlDescargaInforme", "href").replace("..", "http://cnmv.es/Portal");
+    				entityCode = spiderBot.getPlainText("ctl00_ContentPrincipal_ctl11_lblNIFCont");
+    				period_end = spiderBot.getPlainText("ctl00_ContentPrincipal_ctl11_lblFinPeriodoCont");
+    				form = spiderBot.getPlainText("ctl00_ContentPrincipal_ctl12_txtInfoXBRL").replaceAll("El informe ha sido elaborado basándose en la taxonomía ", "").replace(".", "");
     			}
     			
     			if (url_ixbrl == "NULL") {
     				System.out.print(".");
-    				url_ixbrl = crawlerGetAttrValue("ctl00_ContentPrincipal_ctl13_hlDescargaInforme", "href").replace("..", "http://cnmv.es/Portal");
-    				entityCode = crawlerGetPlainText("ctl00_ContentPrincipal_ctl12_lblNIFCont");
-    				period_end = crawlerGetPlainText("ctl00_ContentPrincipal_ctl12_lblFinPeriodoCont");
-    				form = crawlerGetPlainText("ctl00_ContentPrincipal_ctl13_txtInfoXBRL").replaceAll("El informe ha sido elaborado basándose en la taxonomía ", "").replace(".", "");
+    				url_ixbrl = spiderBot.getAttrValue("ctl00_ContentPrincipal_ctl13_hlDescargaInforme", "href").replace("..", "http://cnmv.es/Portal");
+    				entityCode = spiderBot.getPlainText("ctl00_ContentPrincipal_ctl12_lblNIFCont");
+    				period_end = spiderBot.getPlainText("ctl00_ContentPrincipal_ctl12_lblFinPeriodoCont");
+    				form = spiderBot.getPlainText("ctl00_ContentPrincipal_ctl13_txtInfoXBRL").replaceAll("El informe ha sido elaborado basándose en la taxonomía ", "").replace(".", "");
     			}
     			
     		    // Storing data in a list.
@@ -133,6 +163,7 @@ public class Scraper {
 	/**
 	 * Method that returns a Document with the HTML content of the web.
 	 * It allows the application of JSoup methods on it.
+	 * Attention! If in a hundred seconds HTML is not detected, the connection must be checked!
 	 * 
 	 * @param webURL - Text string with the URL of the web page.
 	 * @return Document HTML.
@@ -150,42 +181,6 @@ public class Scraper {
 		
 	    return doc;
 	}
-	
-	/**
-	 * Function that is entered in another link to collect more information.
-	 * 
-	 * @param webURL - New URL (String)
-	 * @param ID - Identifier of the searched tag (String).
-	 * @param ELEMENT - Element from which the value will be collected (String).
-	 * @return The value of the parameter called "ELEMENT" (String).
-	 */
-	private static String crawlerGetAttrValue(String ID, String ELEMENT) {
-					
-		Element element = doc.getElementById(ID);
-		
-		if (element == null) {return "NULL";}
-		
-		String value = element.attr(ELEMENT);
-		return value;
-	}
-	
-	/*
-	 * Function that is entered in another link to collect more information.
-	 * 
-	 * @param webURL - New URL (String)
-	 * @param ID - Identifier of the searched tag (String).
-	 * @return The value of the parameter called "ID" (String).
-	 */
-	private static String crawlerGetPlainText(String ID) {
-						
-		Element element = doc.getElementById(ID);
-		
-		if (element == null) {return "NULL";}
-		
-		String value = element.getElementsByAttributeValue("id", ID).text();
-		return value;
-	}
-	
 	
 }
 

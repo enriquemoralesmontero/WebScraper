@@ -75,6 +75,8 @@ public class DataBase {
 		
 		int rowsInserted = 0;
 		
+		System.out.println("\tIns\tMessage");
+		
 		for (int i = list.size() - 1; i <= list.size() && i >= 0; i--) {
 			
 			InfoCNMV registry = list.get(i);
@@ -100,7 +102,7 @@ public class DataBase {
 				newRows = sentence.executeUpdate(query);
 				rowsInserted += newRows;
 				if (newRows > 0) {
-					System.out.println("\tRegistry inserted! - Rows inserted: " + rowsInserted);
+					System.out.println("\t" + rowsInserted + "\tRegistry inserted!");
 				}
 			} catch (SQLException e) {
 				System.err.println("SQL exception in the insertion.");
@@ -114,7 +116,7 @@ public class DataBase {
 		
 	}
 
-	public String lastUrlInfoContext() {
+	public String getLastUrlInfoContext() {
 		
 		String query = "SELECT url_info_context FROM financialinfo ORDER by ID DESC LIMIT 1";
 		String lastContext = "NULL";
