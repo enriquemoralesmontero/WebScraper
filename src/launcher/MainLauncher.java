@@ -1,5 +1,6 @@
 package launcher;
 
+import model.DataBase;
 import model.Scraper;
 import objects.RegistryList;
 
@@ -23,14 +24,41 @@ public class MainLauncher {
 	 */
 	public static void main(String[] args) {
 
-		System.out.println("Starting...");
+		System.out.println("Starting...\n");
 		
-		RegistryList list = Scraper.getListOfInfoCNMV(webURL);
+		DataBase mysql = new DataBase();
+		String lastUrlInfoContext = "NULL";
 		
-		for (int i = 0; i < list.size(); i++) {
-			System.out.println(list.get(i));
+		if (mysql.hasRegistries()) {
+			lastUrlInfoContext = mysql.lastUrlInfoContext();
+			System.out.println("Last registry:\n\n\t" + lastUrlInfoContext);
 		}
 		
-		System.out.println("Finish!");
+		// Web scraping.
+		// The data will be stored in a list of registries.
+		
+		System.out.println("\nScraping...");
+		
+		RegistryList list = Scraper.getListOfInfoCNMV(webURL, lastUrlInfoContext);
+		
+		// The data extracted by the web scraper will be displayed.
+		// They will be displayed by console.
+		
+		System.out.println("\n\nNew registries in CNMV: " + list.size() + "\n");
+		
+		if (list.size() > 0) {
+			
+			for (int i = 0; i < list.size(); i++) {
+				System.out.println(list.get(i));
+			}
+			
+			// Storage in the MySQL database.
+			// The data is stored in order if it is not already in the database.
+			
+			System.out.println("\nInserting in the database...\n");
+			mysql.store(list);
+		}	
+		
+		System.out.println("\nFinish!");
 	}
 }

@@ -23,25 +23,28 @@ public class Scraper {
 	 * 
 	 * 
 	 * @param webURL - Text string with the URL of the web page.
+	 * @param lastUrlInfoContext 
 	 */
-	public static RegistryList getListOfInfoCNMV(final String webURL) {
+	public static RegistryList getListOfInfoCNMV(final String webURL, final String lastUrlInfoContext) {
 		
 		RegistryList list = new RegistryList();				// List of scraped data.
 		
+		System.out.println("\n\tThis task may take a while...");
+		
 		if (getStatusConnectionCode(webURL) == 200) {		// It checks if the code is 200 when making the request.
-			
-            Document document = getHtmlDocument(webURL); 	// The HTML of the web is obtained in a Document object.
-			
-            // Searching for data...
+
+			Document document = getHtmlDocument(webURL); 	// The HTML of the web is obtained in a Document object.
+
+			// Searching for data...
             		
             Elements entradas = document.select("tr"); 
-            System.out.println("Elements: " + entradas.size() + " registries.\n");
+            System.out.println("\n\tElements: " + entradas.size() + " registries.");
             
             // Loop of elements.            
             
             for (int i = 1; i < entradas.size(); i++) {
             	
-            	System.out.print("\n\t" + i + "/" + entradas.size());
+            	System.out.print("\n\t\tScanning " + i + "/" + entradas.size());
     			Element element = entradas.get(i);
 
     			// Getting data.
@@ -51,12 +54,17 @@ public class Scraper {
     			String url_info_context = link.attr("href").replace("../..", "http://cnmv.es/Portal");
     			String entityName = element.getElementsByAttributeValue("data-th", "Nombre del emisor").text();
     			
+    			if (url_info_context.equals(lastUrlInfoContext)) {
+    				System.out.println(" - This record matches the last one in the database. Finishing the scraping...");
+    				break;
+    			}
+    			
     			doc = getHtmlDocument(url_info_context);
     			
     			String url_ixbrl = crawlerGetAttrValue("ctl00_ContentPrincipal_ctl11_hlDescargaInforme", "href").replace("..", "http://cnmv.es/Portal");
     			String entityCode = crawlerGetPlainText("ctl00_ContentPrincipal_ctl10_lblNIFCont");  			
     			String period_end = crawlerGetPlainText("ctl00_ContentPrincipal_ctl10_lblFinPeriodoCont");
-    			String form = crawlerGetPlainText("ctl00_ContentPrincipal_ctl11_txtInfoXBRL");
+    			String form = crawlerGetPlainText("ctl00_ContentPrincipal_ctl11_txtInfoXBRL").replaceAll("El informe ha sido elaborado basándose en la taxonomía ", "").replace(".", "");
     			String format = "XBRL";
     			String hash_code = "";
     			String oam = "CNMV";
@@ -70,7 +78,7 @@ public class Scraper {
     				url_ixbrl = crawlerGetAttrValue("ctl00_ContentPrincipal_ctl12_hlDescargaInforme", "href").replace("..", "http://cnmv.es/Portal");
     				entityCode = crawlerGetPlainText("ctl00_ContentPrincipal_ctl11_lblNIFCont");
     				period_end = crawlerGetPlainText("ctl00_ContentPrincipal_ctl11_lblFinPeriodoCont");
-    				form = crawlerGetPlainText("ctl00_ContentPrincipal_ctl12_txtInfoXBRL");
+    				form = crawlerGetPlainText("ctl00_ContentPrincipal_ctl12_txtInfoXBRL").replaceAll("El informe ha sido elaborado basándose en la taxonomía ", "").replace(".", "");
     			}
     			
     			if (url_ixbrl == "NULL") {
@@ -78,7 +86,7 @@ public class Scraper {
     				url_ixbrl = crawlerGetAttrValue("ctl00_ContentPrincipal_ctl13_hlDescargaInforme", "href").replace("..", "http://cnmv.es/Portal");
     				entityCode = crawlerGetPlainText("ctl00_ContentPrincipal_ctl12_lblNIFCont");
     				period_end = crawlerGetPlainText("ctl00_ContentPrincipal_ctl12_lblFinPeriodoCont");
-    				form = crawlerGetPlainText("ctl00_ContentPrincipal_ctl13_txtInfoXBRL");
+    				form = crawlerGetPlainText("ctl00_ContentPrincipal_ctl13_txtInfoXBRL").replaceAll("El informe ha sido elaborado basándose en la taxonomía ", "").replace(".", "");
     			}
     			
     		    // Storing data in a list.
@@ -108,15 +116,17 @@ public class Scraper {
 	 * @return Status Code (int).
 	 */
 	private static int getStatusConnectionCode(final String webURL) {
-			
+		//System.out.println("01");
 	    Response response = null;
-		
+	    //System.out.println("02");
 	    try {
+	    	//System.out.println("03");
 	    	response = Jsoup.connect(webURL).userAgent("Mozilla/5.0").timeout(100000).ignoreHttpErrors(true).execute();
+	    	//System.out.println("04");
 	    } catch (IOException ex) {
 	    	System.err.println("Exception when getting the Status Code: " + ex.getMessage());
 	    }
-	    
+	    //System.out.println("1 sale del getCode");
 	    return response.statusCode();
 	}
 	
