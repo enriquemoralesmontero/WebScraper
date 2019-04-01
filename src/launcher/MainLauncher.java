@@ -1,8 +1,8 @@
 package launcher;
 
-import model.DataBase;
+import extractedData.RegistryList;
+import model.DataBaseManager;
 import model.Scraper;
-import objects.RegistryList;
 
 /**
  * The main class that runs the entire project.
@@ -35,7 +35,7 @@ public class MainLauncher {
 		// It will serve to avoid having to review all the data on the website.
 		// If the database is empty, ignore this step.
 		
-		DataBase mysql = new DataBase();						// MySQL database.
+		DataBaseManager mysql = new DataBaseManager();						// MySQL database.
 		String lastUrlInfoContext = "NULL";
 		
 		if (mysql.hasRegistries()) {							// The database is not empty.

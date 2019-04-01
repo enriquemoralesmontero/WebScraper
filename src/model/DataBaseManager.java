@@ -6,8 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import objects.InfoCNMV;
-import objects.RegistryList;
+import extractedData.InfoCNMV;
+import extractedData.RegistryList;
 
 /*
 CREATE TABLE IF NOT EXISTS `financialinfo` (
@@ -26,14 +26,19 @@ CREATE TABLE IF NOT EXISTS `financialinfo` (
 );
  */
 
-public class DataBase {
+public class DataBaseManager {
 	
 	private Connection connection;
 	
-	public DataBase() {
+	public DataBaseManager() {		
+	}
+	
+	private void openConection() {
+		
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			connection = DriverManager.getConnection("jdbc:mysql://localhost:3307/cnmv", "admin", "admin");
+			//connection = DriverManager.getConnection("jdbc:mysql://localhost:3307/cnmv", "admin", "admin");
+			connection = DriverManager.getConnection("jdbc:mysql://localhost/cnmv", "admin", "admin");
 		} catch (SQLException e) {
 			System.err.println("SQL exception...");
 			e.printStackTrace();
@@ -41,13 +46,27 @@ public class DataBase {
 			System.err.println("Class not found. Check the MySQL access driver...");
 			e.printStackTrace();
 		}
+		
+	}
+	
+	private void closeConection() {
+		
+		try {
+			connection.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
 	}
 	
 	public boolean hasRegistries() {
 		
+		openConection();
+		
 		String query = "SELECT COUNT(*) FROM financialinfo";
 		
 		try {
+			
 			boolean hasRegistries = false;
 			int totalRegistries = 0;
 			

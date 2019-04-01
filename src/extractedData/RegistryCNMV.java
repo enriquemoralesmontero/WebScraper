@@ -1,4 +1,4 @@
-package objects;
+package extractedData;
 
 /**
  * Class with the main data collected from the website.

@@ -6,8 +6,9 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import objects.InfoCNMV;
-import objects.RegistryList;
+
+import extractedData.InfoCNMV;
+import extractedData.RegistryList;
 
 /**
  * The class that collects the information from the requested web page.
