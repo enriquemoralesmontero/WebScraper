@@ -1,14 +1,15 @@
-package model;
+package webDataCollectors;
 
 import java.io.IOException;
+import java.util.ArrayList;
+
 import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import extractedData.InfoCNMV;
-import extractedData.RegistryList;
+import extractedDataObjects.RegistryCNMV;
 
 /**
  * The class that collects the information from the requested web page.
@@ -35,11 +36,11 @@ public class Scraper {
 	 * @param webURL - Text string with the URL of the web page.
 	 * @param lastUrlInfoContext 
 	 */
-	public static RegistryList getListOfInfoCNMV(final String webURL, final String lastUrlInfoContext) {
+	public static ArrayList<RegistryCNMV> getListOfInfoCNMV(final String webURL, final String lastUrlInfoContext) {
 		
 		// 1 - Instanced list.
 		
-		RegistryList list = new RegistryList();		// List of scraped data.
+		ArrayList<RegistryCNMV> list = new ArrayList<RegistryCNMV>();		// List of scraped data.
 		
 		// 2 - Checking the connection code.
 		// It checks if the code is 200 when making the request.
@@ -122,7 +123,7 @@ public class Scraper {
     			
     		    // Storing data in a list.
     		    
-    		    InfoCNMV infoCNMV = new InfoCNMV(url_ixbrl, url_info_context, entityName, entityCode, period_end, form, format, hash_code, oam, country);
+    		    RegistryCNMV infoCNMV = new RegistryCNMV(url_ixbrl, url_info_context, entityName, entityCode, period_end, form, format, hash_code, oam, country);
     		    list.add(infoCNMV);
     		}
             

@@ -1,14 +1,16 @@
-package extractedData;
+package extractedDataObjects;
 
 /**
  * Class with all the data collected from the website.
- * Inherits from the class RegistryCNMV.
+ * It corresponds to a registry of the financial information table of the CNMV.
  * 
  * @author Enrique Morales Montero
- * @version 28/3/2019
+ * @since 28/3/2019
+ * @version 1/4/2019
  */
-public class InfoCNMV extends RegistryCNMV {
+public class RegistryCNMV {
 	
+	private String url_ixbrl;
 	private String url_info_context;
 	private String entity_name;
 	private String entity_code;
@@ -20,23 +22,12 @@ public class InfoCNMV extends RegistryCNMV {
 	private String country;
 	
 	/**
-	 * Constructor.
-	 * 
-	 * @param url_ixbrl
-	 * @param url_info_context
-	 * @param entity_name
-	 * @param entity_code
-	 * @param period_end
-	 * @param form
-	 * @param format
-	 * @param hash_code
-	 * @param oam
-	 * @param country
+	 * Constructor with all fields.
 	 */
-	public InfoCNMV(String url_ixbrl, String url_info_context, String entity_name, String entity_code,
+	public RegistryCNMV(String url_ixbrl, String url_info_context, String entity_name, String entity_code,
 			String period_end, String form, String format, String hash_code, String oam, String country) {
 		
-		super(url_ixbrl);
+		this.url_ixbrl = url_ixbrl;
 		this.url_info_context = url_info_context;
 		this.entity_name = entity_name;
 		this.entity_code = entity_code;
@@ -50,6 +41,7 @@ public class InfoCNMV extends RegistryCNMV {
 
 	// Getters.
 	
+	public String getUrl_ixbrl() {return url_ixbrl;}
 	public String getUrl_info_context() {return url_info_context;}
 	public String getEntity_name() {return entity_name;}
 	public String getEntity_code() {return entity_code;}
@@ -62,6 +54,7 @@ public class InfoCNMV extends RegistryCNMV {
 
 	// Setters.
 	
+	public void setUrl_ixbrl(String url_ixbrl) {this.url_ixbrl = url_ixbrl;}
 	public void setUrl_info_context(String url_info_context) {this.url_info_context = url_info_context;}
 	public void setEntity_name(String entity_name) {this.entity_name = entity_name;}
 	public void setEntity_code(String entity_code) {this.entity_code = entity_code;}
@@ -72,6 +65,8 @@ public class InfoCNMV extends RegistryCNMV {
 	public void setOam(String oam) {this.oam = oam;}
 	public void setCountry(String country) {this.country = country;}
 
+	// Other methods.
+	
 	@Override
 	public String toString() {
 		

@@ -1,14 +1,19 @@
 package launcher;
 
-import extractedData.RegistryList;
-import model.DataBaseManager;
-import model.Scraper;
+import java.util.ArrayList;
+
+import databaseClasses.DataBaseManager;
+import extractedDataObjects.RegistryCNMV;
+import webDataCollectors.Scraper;
 
 /**
  * The main class that runs the entire project.
  * 
- * @author Enrique Morales Montero
- * @version 28/3/2019
+ * @author	Enrique Morales Montero
+ * @author	Javier Mora Gonzálbez (project manager)
+ * @author	Carlos Cano Ladera (collaborator, code reviewer)
+ * @since	28/3/2019
+ * @version	1/4/2019
  */
 public class MainLauncher {
 	
@@ -49,7 +54,7 @@ public class MainLauncher {
 		
 		System.out.println("\n · Scraping data...");
 		
-		RegistryList list = Scraper.getListOfInfoCNMV(webURL, lastUrlInfoContext);	// Getting the list of data extracted by the web scraper.
+		ArrayList<RegistryCNMV> list = Scraper.getListOfInfoCNMV(webURL, lastUrlInfoContext);	// Getting the list of data extracted by the web scraper.
 		
 		// 3 - Listing scraped data.
 		// The data extracted by the web scraper will be displayed.
