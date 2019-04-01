@@ -49,6 +49,7 @@ public class DataBaseManager {
 		
 	}
 	
+	
 	private void closeConection() {
 		
 		try {
@@ -58,6 +59,7 @@ public class DataBaseManager {
 		}
 		
 	}
+	
 	
 	public boolean hasRegistries() {
 		
@@ -79,18 +81,25 @@ public class DataBaseManager {
 			resul.close();
 			sentence.close();
 			
+			closeConection();
+			
 			return hasRegistries;
 			
 		} catch (SQLException e) {
+			closeConection();
 			System.err.println("SQL exception...");
 			e.printStackTrace();
 			System.exit(1);
 		}
 		
+		closeConection();
+		
 		return false;
 	}
 
 	public void store(RegistryList list) {
+		
+		openConection();
 		
 		int rowsInserted = 0;
 		
@@ -120,9 +129,12 @@ public class DataBaseManager {
 				Statement sentence = connection.createStatement();
 				newRows = sentence.executeUpdate(query);
 				rowsInserted += newRows;
+				
 				if (newRows > 0) {
 					System.out.println("\t" + rowsInserted + "\tRegistry inserted!");
 				}
+				
+				sentence.close();
 			} catch (SQLException e) {
 				System.err.println("SQL exception in the insertion.");
 				System.err.printf("Message  : %s %n", e.getMessage());
@@ -133,9 +145,12 @@ public class DataBaseManager {
 		
 		System.out.println("\n\tTOTAL: " + rowsInserted + " insertions.");
 		
+		closeConection();
 	}
 
 	public String getLastUrlInfoContext() {
+		
+		openConection();
 		
 		String query = "SELECT url_info_context FROM financialinfo ORDER by ID DESC LIMIT 1";
 		String lastContext = "NULL";
@@ -150,6 +165,7 @@ public class DataBaseManager {
 			
 			resul.close();
 			sentence.close();
+			closeConection();
 			
 			return lastContext;
 			
@@ -158,6 +174,8 @@ public class DataBaseManager {
 			e.printStackTrace();
 			System.exit(1);
 		}
+		
+		closeConection();
 		
 		return lastContext;
 	}
