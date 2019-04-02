@@ -1,7 +1,6 @@
 package launcher;
 
 import java.util.ArrayList;
-
 import databaseClasses.DataBaseManager;
 import extractedDataObjects.RegistryCNMV;
 import webDataCollectors.Scraper;

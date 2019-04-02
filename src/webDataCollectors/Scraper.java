@@ -2,13 +2,11 @@ package webDataCollectors;
 
 import java.io.IOException;
 import java.util.ArrayList;
-
 import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
 import extractedDataObjects.RegistryCNMV;
 
 /**
@@ -28,7 +26,7 @@ public class Scraper {
 	 * <p>	3 - Get the HTML document.												</p>
 	 * <p>	4 - Treats the rows of the HTML table.									</p>
 	 * <p>	5 - Instance a web crawler to enter the hyperlinks.						</p>
-	 * <p>	6 - Loop to extract data from the rows.									</p>
+	 * <p>	6 - Loop to extract data from the rows and store them in a list.		</p>
 	 * <p>		</p>
 	 * <p>		</p>
 	 * <p>		</p>
@@ -43,6 +41,7 @@ public class Scraper {
 		ArrayList<RegistryCNMV> list = new ArrayList<RegistryCNMV>();		// List of scraped data.
 		
 		// 2 - Checking the connection code.
+		
 		// It checks if the code is 200 when making the request.
 		// If there is a bad connection to the website, it will give a code other than 200 (400, 404...)
 		
@@ -51,11 +50,13 @@ public class Scraper {
 		if (getStatusConnectionCode(webURL) == 200) {		
 
 			// 3 - Getting the HTML document.
+			
 			// The HTML of the web is obtained in a Document object.
 			
 			Document document = getHtmlDocument(webURL); 	
 
 			// 4 - Treats the rows of the HTML table.
+			
 			// First essential work of web scraping!
 			// The first elements to be treated are the rows of the HTML table of the web page.
 			// Searching for data...
@@ -64,34 +65,57 @@ public class Scraper {
             System.out.println("\n\tElements: " + rows.size() + " registries.");
             
             // 5 - Instantiate the web crawler.
+            
             // The web spider will be used to enter the hypertext links.
             // This will continue the data collection within them.
             
             Crawler spiderBot = new Crawler();
             
             // 6 - Loop to extract data from the rows.
-            // For each column taken, data is collected.
+            
+            // For each column taken, data is collected with the JSoup's sentences.
             // It is not necessary to control all the rows.
-            // The loop will be exited if the records found have already been previously inserted in the database.
+            // The loop will be exited if the registries found have already been previously inserted in the database.
+            // The extracted data is stored in an ArrayList.
             
             for (int i = 1; i < rows.size(); i++) {
             	
             	System.out.print("\n\t\t- Scanning... " + i + "/" + rows.size());
-    			Element element = rows.get(i);
+    			Element element = rows.get(i);						// Each element contains the row of the HTML table with its HTML information.
 
-    			// Getting data.
+    			// Start of data collection with JSoup...:
     			
-    			Element link = element.select("a").first();
+    			Element hyperlink = element.select("a").first();	// It contains the url_info_context. The spider will use it later.
     			
-    			String url_info_context = link.attr("href").replace("../..", "http://cnmv.es/Portal");
+    			// JSoup data extraction:
+    			//	- url_info_context
+    			//	- entityName
+    			
+    			String url_info_context = hyperlink.attr("href").replace("../..", "http://cnmv.es/Portal");
     			String entityName = element.getElementsByAttributeValue("data-th", "Nombre del emisor").text();
+    			
+    			// Optimization control:
+    			// 		If it matches the last record in the database, it exits the loop.
+    			// 		Thus, it is not necessary to control all the records of the CNMV's web.
     			
     			if (url_info_context.equals(lastUrlInfoContext)) {
     				System.out.println(" [This record matches the last one in the database] - Finishing the scraping...");
     				break;
     			}
     			
+    			// The spiderbot is asked to take care of this web link.
+    			
     			spiderBot.setDocHMTL(getHtmlDocument(url_info_context));
+    			
+    			// JSoup data extraction (with the spider):
+    			//	- url_ixbrl
+    			//	- entityCode
+    			//	- period_end
+    			//	- form
+    			//	- format
+    			//	- hash_code
+    			//	- oam
+    			//	- country
     			
     			String url_ixbrl = spiderBot.getAttrValue("ctl00_ContentPrincipal_ctl11_hlDescargaInforme", "href").replace("..", "http://cnmv.es/Portal");
     			String entityCode = spiderBot.getPlainText("ctl00_ContentPrincipal_ctl10_lblNIFCont");  			
@@ -104,9 +128,10 @@ public class Scraper {
     			
     			// Some entities have made modifications to the model previously registered with the CNMV.
     			// It must be controlled.
+    			// It happens rarely, but it occurs regularly.
     			
     			if (url_ixbrl == "NULL") {
-    				System.out.print(" .");
+    				System.out.print(" .");	// A point is shown to indicate that this record was modified by the entity.
     				url_ixbrl = spiderBot.getAttrValue("ctl00_ContentPrincipal_ctl12_hlDescargaInforme", "href").replace("..", "http://cnmv.es/Portal");
     				entityCode = spiderBot.getPlainText("ctl00_ContentPrincipal_ctl11_lblNIFCont");
     				period_end = spiderBot.getPlainText("ctl00_ContentPrincipal_ctl11_lblFinPeriodoCont");
@@ -148,17 +173,17 @@ public class Scraper {
 	 * @return Status Code (int).
 	 */
 	private static int getStatusConnectionCode(final String webURL) {
-		//System.out.println("01");
+		
 	    Response response = null;
-	    //System.out.println("02");
+	    
 	    try {
-	    	//System.out.println("03");
+	    	
 	    	response = Jsoup.connect(webURL).userAgent("Mozilla/5.0").timeout(100000).ignoreHttpErrors(true).execute();
-	    	//System.out.println("04");
+	    	
 	    } catch (IOException ex) {
 	    	System.err.println("Exception when getting the Status Code: " + ex.getMessage());
 	    }
-	    //System.out.println("1 sale del getCode");
+	    
 	    return response.statusCode();
 	}
 	

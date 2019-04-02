@@ -1,8 +1,5 @@
-/extractedData/
-/jsoup-1.11.3.jar
-/launcher/
-/model/
-/mysql-connector-java-5.1.38-bin.jar
-/extractedDataObjects/
+/cryptography/
 /databaseClasses/
+/extractedDataObjects/
+/launcher/
 /webDataCollectors/

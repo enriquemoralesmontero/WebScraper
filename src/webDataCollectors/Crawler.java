@@ -4,7 +4,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 /**
- * A web crawler, sometimes called a spider or spiderbot.
+ * A web crawler, sometimes called a web-spider or spiderbot.
  * The spider enters the hypertext links and continues to extract data from there.
  * 
  * @author Enrique Morales Montero
