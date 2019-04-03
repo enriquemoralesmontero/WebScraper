@@ -1,5 +1,11 @@
 /cryptography/
-/databaseClasses/
-/extractedDataObjects/
 /launcher/
 /webDataCollectors/
+/databaseclasses2/
+/databaseclasses/
+/extracteddataobject/
+/extracteddataobjects/
+/junittests/
+/database/
+/junit/
+/webdata/

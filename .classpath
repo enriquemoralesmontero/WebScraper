@@ -5,6 +5,7 @@
 	<classpathentry kind="src" path="libraries"/>
 	<classpathentry kind="lib" path="libraries/jsoup-1.11.3.jar"/>
 	<classpathentry kind="lib" path="libraries/mysql-connector-java-5.1.38-bin.jar"/>
-	<classpathentry kind="lib" path="libraries/bcprov-debug-jdk15on-161.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="libraries/bcprov-jdk15on-161.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

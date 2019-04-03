@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -21,7 +22,7 @@ import org.bouncycastle.util.encoders.Hex;
  * 
  * @author Enrique Morales Monteroç
  * @since 2/4/2019
- * @version 2/4/2019 
+ * @version 3/4/2019 
  */
 public class Algorithm {
 	
@@ -44,7 +45,7 @@ public class Algorithm {
 			// Connection.
 
 			URLConnection urlCon = url.openConnection();	// Connection: open.
-
+			
 			InputStream is = urlCon.getInputStream();		// Getting InputStream.
 			FileOutputStream fos = new FileOutputStream(tempFolder + "/temp.xml"); // Opening the file in the local system.
 			
@@ -85,6 +86,7 @@ public class Algorithm {
 			}
 			
 		} catch (MalformedURLException e) {e.printStackTrace();
+		} catch (UnknownHostException e) {e.printStackTrace();
 		} catch (IOException e) {e.printStackTrace();
 		}
 
