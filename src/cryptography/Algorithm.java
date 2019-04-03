@@ -81,7 +81,7 @@ public class Algorithm {
 			// Errors controls.
 			
 			if (hash_code.equals("a7ffc6f8bf1ed76651c14756a061d662f580ff4de43b49fa82d80a4b80f8434a")) {
-				System.err.println("Attention: Empty file!");
+				System.out.print(" - Attention: Empty XML file! - ");
 			}
 			
 		} catch (MalformedURLException e) {e.printStackTrace();

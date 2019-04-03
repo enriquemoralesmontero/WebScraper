@@ -7,6 +7,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+
+import cryptography.Algorithm;
 import extractedDataObjects.RegistryCNMV;
 
 /**
@@ -113,7 +115,6 @@ public class Scraper {
     			//	- period_end
     			//	- form
     			//	- format
-    			//	- hash_code
     			//	- oam
     			//	- country
     			
@@ -122,7 +123,6 @@ public class Scraper {
     			String period_end = spiderBot.getPlainText("ctl00_ContentPrincipal_ctl10_lblFinPeriodoCont");
     			String form = spiderBot.getPlainText("ctl00_ContentPrincipal_ctl11_txtInfoXBRL").replaceAll("El informe ha sido elaborado basándose en la taxonomía ", "").replace(".", "");
     			String format = "XBRL";
-    			String hash_code = "";
     			String oam = "CNMV";
     			String country = "ES";
     			
@@ -145,6 +145,11 @@ public class Scraper {
     				period_end = spiderBot.getPlainText("ctl00_ContentPrincipal_ctl12_lblFinPeriodoCont");
     				form = spiderBot.getPlainText("ctl00_ContentPrincipal_ctl13_txtInfoXBRL").replaceAll("El informe ha sido elaborado basándose en la taxonomía ", "").replace(".", "");
     			}
+    			
+    			// JSoup data extraction (with SHA3-256):
+    			//	- hash_code
+    			
+    			String hash_code = Algorithm.generateSHA3_256(url_ixbrl);
     			
     		    // Storing data in a list.
     		    
