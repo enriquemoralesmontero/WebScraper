@@ -11,8 +11,6 @@ import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-//import java.security.MessageDigest;
-//import java.security.NoSuchAlgorithmException;
 import java.security.Security;
 import org.bouncycastle.jcajce.provider.digest.SHA3;
 import org.bouncycastle.jcajce.provider.digest.SHA3.DigestSHA3;
@@ -26,7 +24,7 @@ import org.bouncycastle.util.encoders.Hex;
  * @since 2/4/2019
  * @version 3/4/2019 
  */
-public class Algorithm {
+public class Algorithm2 {
 	
 	final static String tempFolder = "./"; 
 	
@@ -76,14 +74,7 @@ public class Algorithm {
 			Path filePath = Paths.get(file.getAbsolutePath());	// Path.
 			byte[] fileBytes = Files.readAllBytes(filePath);	// Bytes.
 
-			/*
-			MessageDigest md = MessageDigest.getInstance("SHA3-256");	// This code does not work. 
-			md.update(fileBytes);										// It requires a later version of Java.
-			byte sha3Bytes[] = md.digest();
-			hash_code = getHexadecimal(sha3Bytes);
-			*/
-			
-			Security.addProvider(new BouncyCastleProvider());	// BouncyCastle hash generator.
+			Security.addProvider(new BouncyCastleProvider());
 			DigestSHA3 digestSHA3 = new SHA3.Digest256();		// SHA3 256.
 			digestSHA3.update(fileBytes);						// Getting the hash code.
 			hash_code = Hex.toHexString(digestSHA3.digest());	// To string...
@@ -97,33 +88,8 @@ public class Algorithm {
 		} catch (MalformedURLException e) {e.printStackTrace();
 		} catch (UnknownHostException e) {e.printStackTrace();
 		} catch (IOException e) {e.printStackTrace();
-		//} catch (NoSuchAlgorithmException e) {e.printStackTrace();
 		}
 
 		return hash_code;
-	}
-
-	/**
-	 * Method used to calculate the hexadecimal of an array of bytes.
-	 * It has been replaced by the library method.
-	 * It could be reused in the future.
-	 * 
-	 * @deprecated
-	 * @param sha3Bytes (byte[])
-	 * @return Hexadecimal (String)
-	 */
-	@SuppressWarnings("unused")
-	private static String getHexadecimal(byte[] sha3Bytes) {
-		
-		String hex = "";
-		
-		for (byte b : sha3Bytes) {
-			String h = Integer.toHexString(b & 0xFF);
-			if (h.length() == 1) {hex += "0";}
-			
-			hex += h;
-		}
-		
-		return hex.toUpperCase();
 	}
 }

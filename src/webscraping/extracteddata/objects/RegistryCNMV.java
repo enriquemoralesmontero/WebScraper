@@ -1,4 +1,4 @@
-package webdata.extracteddata.objects;
+package webscraping.extracteddata.objects;
 
 /**
  * Class with all the data collected from the website.

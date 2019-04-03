@@ -19,18 +19,18 @@ public class AlgorithmCNMVTest {
 		 * Generated hash code by https://emn178.github.io/online-tools/sha3_256_checksum.html
 		 * from the XML (XBRL report).
 		 */
-		final String correctHash = "08b8938a7e2f511a8496698818ac1a5533ef8ecee8a5a594ee29b286744140a7";
+		final String expectedHash = "08b8938a7e2f511a8496698818ac1a5533ef8ecee8a5a594ee29b286744140a7";
 		
 		final String generatedHash = Algorithm.generateSHA3_256(url_ixbrl);
 		
 		// Show preview.
 		
 		System.out.println(generatedHash);
-		System.out.println(correctHash);
+		System.out.println(expectedHash);
 		
 		// Verification.
 		
-		assertEquals(correctHash, generatedHash); // OK. generatedHash = correctHash
+		assertEquals(expectedHash, generatedHash); // OK. generatedHash = correctHash
 	}
 	
 }

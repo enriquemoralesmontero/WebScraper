@@ -3,8 +3,8 @@ package launcher;
 import java.util.ArrayList;
 
 import database.classes.DataBaseManager;
-import webdata.collectors.Scraper;
-import webdata.extracteddata.objects.RegistryCNMV;
+import webscraping.collectors.Scraper;
+import webscraping.extracteddata.objects.RegistryCNMV;
 
 /**
  * The main class that runs the entire project.

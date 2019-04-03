@@ -8,7 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import webdata.extracteddata.objects.RegistryCNMV;
+import webscraping.extracteddata.objects.RegistryCNMV;
 
 /*
 CREATE TABLE IF NOT EXISTS financialinfo (
@@ -226,7 +226,7 @@ public class DataBaseManager {
 	 * This would take a long time, so speed is gained.
 	 * 
 	 * @return An String (last url_info_context).
-	 * @see webdata.collectors.Scraper Scraper - For extracting data from the CNMV website.
+	 * @see webscraping.collectors.Scraper Scraper - For extracting data from the CNMV website.
 	 */
 	public String getLastUrlInfoContext() {
 		

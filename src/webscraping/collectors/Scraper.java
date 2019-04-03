@@ -1,4 +1,4 @@
-package webdata.collectors;
+package webscraping.collectors;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -8,7 +8,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import cryptography.Algorithm;
-import webdata.extracteddata.objects.RegistryCNMV;
+import webscraping.extracteddata.objects.RegistryCNMV;
 
 /**
  * The class that collects the information from the requested web page.
