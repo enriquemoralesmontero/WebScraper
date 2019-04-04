@@ -11,7 +11,7 @@ import webscraping.extracteddata.objects.RegistryCNMV;
  * 
  * @author	Enrique Morales Montero
  * @author	Javier Mora Gonzálbez (project manager)
- * @author	Carlos Cano Ladera (collaborator, code reviewer)
+ * @author	Carlos Cano Ladera (guiding with app design, development and documentation)
  * @since	28/3/2019
  * @version	3/4/2019
  */
@@ -23,14 +23,14 @@ public class MainLauncher {
 	public static final String webURL = "http://cnmv.es/Portal/Consultas/IFI/ListaIFI.aspx?XBRL=S";
 	
 	/**
-	 * Main method.
-	 * Its main functions are the following:
+	 * This is the main method in the app
+	 * It follows some steps
 	 * 
 	 * <ol>
-	 * <li>	Take the first registry in the database.	</li>
-	 * <li>	Extract data from the Web (web scraping).	</li>
-	 * <li>	List the extracted data.					</li>
-	 * <li>	Store the extracted data in the database.	</li>
+	 * <li>	First. Take the first registry from the database.	</li>
+	 * <li>	Second. Extract the targeted data from the Web (web scraping).	</li>
+	 * <li>	Third. List the extracted data.					</li>
+	 * <li>	Finally. Store the retrieved data in the database.	</li>
 	 * </ol>
 	 * 
 	 * @param args - They are not necessary.
@@ -42,10 +42,20 @@ public class MainLauncher {
 		System.out.println(" · Starting...\n");
 
 		
-		// 1 - Getting the first registry in the database.
+		//Mira este ejemplo en ingles a ver que te parece, lo hago asi mejor
+		
+		//Mete manejo de excepciones y log.
+		
+		// 1 - Getting the first registry from the database.
 		//
-		// It will serve to avoid having to review all the data on the website.
-		// If the database is empty, ignore this step.
+		// this functionality aim is the addition of the new data in the website.
+		// The first time we run the process we gather all the information from 
+		// the website. The subsequent executions only retrieve the new data, since
+		// we find in the cnmv website new registries. We go through a registry list at
+		// the cnmv web site. We stop the web crawling as the 
+		// first registry in  our database match with the next registry in our cnmv website 
+		// . Conversely, if the database is empty, the function ignore 
+		// this step due to the fact that we need to gather whole data
 		
 		DataBaseManager mysql = new DataBaseManager();						// MySQL database.
 		String lastUrlInfoContext = "NULL";
