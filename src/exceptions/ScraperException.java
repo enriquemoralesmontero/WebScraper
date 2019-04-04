@@ -12,6 +12,7 @@ public class ScraperException extends Exception {
 	private static final String FILE_PATH = "errors.log";
 	private File file;
 	private Exception exception;
+	private String msg;
 
 	/**
 	 * Constructor.
@@ -21,12 +22,28 @@ public class ScraperException extends Exception {
 	public ScraperException (final Exception exceptionParam) {
 		
 		super();
-		exception = exceptionParam;
+		this.exception = exceptionParam;
+		this.msg = "";
 		
 		createLog();
 		writeLog();
 	}
 
+	/**
+	 * Constructor with message.
+	 * 
+	 * @param exceptionParam
+	 */
+	public ScraperException (final Exception exceptionParam, final String msg) {
+		
+		super();
+		this.exception = exceptionParam;
+		this.msg = "Message: " + msg + "\n";
+		
+		createLog();
+		writeLog();
+	}
+	
 	/**
 	 * Procedure that creates the file where the log is stored if it does not exist.
 	 */
@@ -64,7 +81,7 @@ public class ScraperException extends Exception {
 			printWriter.println("Date: " + thisDate.getDayMonthYear() + ".");
 			printWriter.println("Hour: " + thisDate.getClockTime() + ".");
 			printWriter.println("Type: " + this.exception.getClass().getSimpleName() + ".");
-			printWriter.println();
+			printWriter.println(this.msg);
 			printWriter.println(this.exception.getCause().getLocalizedMessage());
 			printWriter.println();
 			printWriter.println();
