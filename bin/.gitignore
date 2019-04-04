@@ -1,12 +1,5 @@
-/cryptography/
-/launcher/
-/webDataCollectors/
-/databaseclasses2/
-/databaseclasses/
-/extracteddataobject/
-/extracteddataobjects/
-/junittests/
+/exceptions/
 /database/
 /junit/
-/webdata/
+/launcher/
 /webscraping/
