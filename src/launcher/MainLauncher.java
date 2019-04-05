@@ -13,7 +13,7 @@ import webscraping.extracteddata.objects.RegistryCNMV;
  * @author	Javier Mora Gonzálbez (project manager)
  * @author	Carlos Cano Ladera (guiding with app design, development and documentation)
  * @since	28/3/2019
- * @version	4/4/2019
+ * @version	5/4/2019
  */
 public class MainLauncher {
 	
@@ -67,7 +67,7 @@ public class MainLauncher {
 		// 2 - Web scraping.
 		//
 		// The data will be stored in a list of registries.
-		// All data is collected until it matches the last record in the database.
+		// All data is collected until it matches the last registry in the database.
 		
 		System.out.println("\n · Scraping data...");
 		

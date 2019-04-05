@@ -15,7 +15,7 @@ import webscraping.extracteddata.objects.RegistryCNMV;
  * 
  * @author Enrique Morales Montero
  * @since 29/3/2019
- * @version 3/4/2019
+ * @version 5/4/2019
  */
 public class Scraper {
 	
@@ -24,18 +24,18 @@ public class Scraper {
 	 * It is responsible for the following features:
 	 * 
 	 * <ol>
-	 * <li>	Instance a list.													</li>
-	 * <li>	Check that the connection code to the web page is correct (200).	</li>
-	 * <li>	Get the HTML document.												</li>
-	 * <li>	Treats the rows of the HTML table.									</li>
-	 * <li>	Instance a web crawler to enter the hyperlinks.						</li>
-	 * <li>	Loop to extract data from the rows and store them in the list.		</li>
+	 * <li>	Instance a list.												</li>
+	 * <li>	Check correctness of the connection code to the web page (200).	</li>
+	 * <li>	Get the HTML document.											</li>
+	 * <li>	Treats the rows of the HTML table.								</li>
+	 * <li>	Instance a web crawler to enter the hyperlinks.					</li>
+	 * <li>	Loop to extract data from the rows and store them in the list.	</li>
 	 * </ol>
 	 * 
 	 * @param webURL - Text string with the URL of the web page.
 	 * @param lastUrlInfoContext 
 	 * 
-	 * @see Scraper#getStatusConnectionCode() getStatusConnectionCode() - Method for checking the connection code.
+	 * @see Scraper#getStatusConnectionCode() getStatusConnectionCode() - Method to check the connection code.
 	 */
 	public static ArrayList<RegistryCNMV> getListOfInfoCNMV(final String webURL, final String lastUrlInfoContext) {
 		
@@ -81,9 +81,9 @@ public class Scraper {
             
             // 6 - Loop to extract data from the rows.
             //
-            // For each column taken, data is collected with the JSoup's sentences.
+            // For each column taken, data is collected with the JSoup sentences.
             // It is not necessary to control all the rows.
-            // The loop will be exited if the registries found have already been previously inserted in the database.
+            // The loop will be abandoned if the registries found have already been previously inserted in the database.
             // The extracted data is stored in an ArrayList.
             
             for (int i = 1; i < rows.size(); i++) {
@@ -103,15 +103,15 @@ public class Scraper {
     			String entityName = element.getElementsByAttributeValue("data-th", "Nombre del emisor").text();
     			
     			// Optimization control:
-    			// 		If it matches the last record in the database, it exits the loop.
-    			// 		Thus, it is not necessary to control all the records of the CNMV's web.
+    			// 		If it matches the last registry in the database, it exits the loop.
+    			// 		Thus, it is not necessary to control all the registries of the CNMV's web.
     			
     			if (url_info_context.equals(lastUrlInfoContext)) {
-    				System.out.println(" [This record matches the last one in the database] - Finishing the scraping...");
+    				System.out.println(" [This registry matches the last one in the database] - Finishing the scraping...");
     				break;
     			}
     			
-    			// The spiderbot is asked to take care of this web link.
+    			// The spiderbot is asked to manage this web link.
     			
     			spiderBot.setDocHMTL(getHtmlDocument(url_info_context));
     			
@@ -132,12 +132,12 @@ public class Scraper {
     			String oam = "CNMV";
     			String country = "ES";
     			
-    			// Some entities have made modifications to the model previously registered with the CNMV.
+    			// Some entities have made modifications in the XBRL report.
     			// It must be controlled.
-    			// It happens rarely, but it occurs regularly.
+    			// It happens rarely, but it might occur.
     			
     			if (url_ixbrl == "NULL") {
-    				System.out.print(" (with modifications)");	// A text is shown to indicate that this record was modified by the entity.
+    				System.out.print(" (with modifications)");	// A text is shown to indicate that this registry was modified by the entity.
     				url_ixbrl = spiderBot.getAttrValue("ctl00_ContentPrincipal_ctl12_hlDescargaInforme", "href").replace("..", "http://cnmv.es/Portal");
     				entityCode = spiderBot.getPlainText("ctl00_ContentPrincipal_ctl11_lblNIFCont");
     				period_end = spiderBot.getPlainText("ctl00_ContentPrincipal_ctl11_lblFinPeriodoCont");
