@@ -55,7 +55,7 @@ public class MainLauncher {
 		// the cnmv web site. We stop the web crawling as the 
 		// first registry in  our database match with the next registry in our cnmv website 
 		// . Conversely, if the database is empty, the function ignore 
-		// this step due to the fact that we need to gather whole data
+		// this step due to the fact that we need to gather the whole data
 		
 		DataBaseManager mysql = new DataBaseManager();						// MySQL database.
 		String lastUrlInfoContext = "NULL";
@@ -68,8 +68,9 @@ public class MainLauncher {
 		
 		// 2 - Web scraping.
 		//
-		// The data will be stored in a list of registries.
-		// All data is collected until it matches the last record in the database.
+		// As we go through  the cnmv web site, the program store each data registry in a list
+		// Reminding what we stated before, we store registries until a registry match with the most recent
+		// data in the database 
 		
 		System.out.println("\n · Scraping data...");
 		
@@ -78,9 +79,9 @@ public class MainLauncher {
 		
 		// 3 - Listing scraped data.
 		//
-		// The data extracted by the web scraper will be displayed.
-		// They will be show by console.
-		// If there is no new data, this list is omitted.
+		// In order to inform about our progress we list the new data row by row at the console
+		// Only if there are new data available
+		// In other case we skip this step.
 		
 		System.out.println("\n\n · New registries in CNMV: " + list.size() + "\n");
 		
@@ -93,8 +94,9 @@ public class MainLauncher {
 			
 			// 4 - Storage in the MySQL database.
 			//
-			// The data is stored in order if it is not already in the database.
-			// If there is no new data, this process is omitted.
+			// At this point we have already gathered all the new information available.
+			// Hence, our code add the new data in our MySQL database.
+			// 
 			
 			System.out.println("\nInserting in the database...\n");
 			mysql.store(list);						// Storing extracted data...

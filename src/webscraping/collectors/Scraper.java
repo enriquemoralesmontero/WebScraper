@@ -20,16 +20,20 @@ import webscraping.extracteddata.objects.RegistryCNMV;
 public class Scraper {
 	
 	/**
-	 * This is the most important function of the scraper.
-	 * It is responsible for the following features:
+	 * This is the main class in our program, the controller. It manages
+	 * all the steps to complete our purpose (algorithm) and achieve our goal,
+	 * which is gathering and storing any new information the cnmv website 
+	 * offers about companies. Particularly, we target the accountability 
+	 * data usually provided each quarter   
+	 * It follows these steps:
 	 * 
 	 * <ol>
-	 * <li>	Instance a list.													</li>
-	 * <li>	Check that the connection code to the web page is correct (200).	</li>
-	 * <li>	Get the HTML document.												</li>
+	 * <li>	Firstly, Instance a list.													</li>
+	 * <li>	Then, Check that the connection code to the web page is correct (200).	</li>
+	 * <li>	After that it gets the HTML document.												</li>
 	 * <li>	Treats the rows of the HTML table.									</li>
-	 * <li>	Instance a web crawler to enter the hyperlinks.						</li>
-	 * <li>	Loop to extract data from the rows and store them in the list.		</li>
+	 * <li>	It goes on getting and instance of a web crawler to enter the hyperlinks.						</li>
+	 * <li>	An finally it goes through the cnmv list to extract data from the rows and store them in the list.		</li>
 	 * </ol>
 	 * 
 	 * @param webURL - Text string with the URL of the web page.
