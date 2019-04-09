@@ -1,4 +1,4 @@
-package errorcontrol;
+package log;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

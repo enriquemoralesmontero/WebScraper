@@ -1,5 +1,7 @@
 package cryptography;
 
+import static log.LogManager.writeLog;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -18,7 +20,6 @@ import org.bouncycastle.jcajce.provider.digest.SHA3;
 import org.bouncycastle.jcajce.provider.digest.SHA3.DigestSHA3;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.encoders.Hex;
-import static errorcontrol.LogManager.writeLog;
 
 /**
  * This class offers a set of algorithms to obtain the hash code.

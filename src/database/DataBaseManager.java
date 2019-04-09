@@ -1,5 +1,7 @@
 package database;
 
+import static log.LogManager.writeLog;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -9,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import com.mysql.jdbc.exceptions.jdbc4.CommunicationsException;
 import com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException;
-import static errorcontrol.LogManager.writeLog;
+
 import webscraping.RegistryCNMV;
 
 /**
@@ -51,7 +53,7 @@ public class DataBaseManager {
 	
 	/**
 	 * Private procedure that opens the connection to the database.
-	 * It uses the mysql driver to establish connections and give them back to the pool of connections.
+	 * It uses the MySQL driver to establish connections and give them back to the pool of connections.
 	 * 
 	 * @see DataBaseManager#connection	connection - Treated field.
 	 * 

@@ -1,4 +1,4 @@
-package errorcontrol;
+package log;
 
 import java.io.File;
 import java.io.FileWriter;
