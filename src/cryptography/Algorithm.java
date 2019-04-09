@@ -19,22 +19,35 @@ import org.bouncycastle.jcajce.provider.digest.SHA3.DigestSHA3;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.encoders.Hex;
 
+import errorcontrol.LogManager;
+
 /**
- * Algorithm is a class  that offers a set of algorithms to obtain the hash code.
+ * This class offers a set of algorithms to obtain the hash code.
  * 
- * @author Enrique Morales Monteroç
- * @since 2/4/2019
- * @version 3/4/2019 
+ * @author	Enrique Morales Montero (design, development, documentation)
+ * @author	Javier Mora Gonzálbez (mentor and requirements analyst)
+ * @author	Carlos Cano Ladera (mentor, guiding with design, development and documentation)
+ * @since	2/4/2019
+ * @version 5/4/2019 
  */
 public class Algorithm {
 	
 	final static String tempFolder = "./"; 
 	
 	/**
-	 * Function that generates a hash code.  This has code is needed to identify our documents 
+	 * The function that generates the hash code (SHA3 256) from the XML whose URL is passed by parameter.
+	 * It uses the library of BouncyCastle.
 	 * 
 	 * @param url_ixbrl
+	 * 
 	 * @return hash_code (String)
+	 * 
+	 * @throws MalformedURLException 
+	 * @throws UnknownHostException
+	 * @throws IOException
+	 * 
+	 * @see <a href="https://www.bouncycastle.org/latest_releases.html">BouncyCastle Web (Latest releases)</a>
+	 * @see <a href="https://www.bouncycastle.org/download/bcprov-jdk15on-161.jar">Library used</a>
 	 */
 	public static String generateSHA3_256(String url_ixbrl) {
 		
@@ -48,27 +61,24 @@ public class Algorithm {
 
 			URLConnection urlCon = url.openConnection();	// Connection: open.
 			
-			InputStream is = urlCon.getInputStream();		// Getting the InputStream.
+			InputStream is = urlCon.getInputStream();		// Getting InputStream.
 			FileOutputStream fos = new FileOutputStream(tempFolder + "/temp.xml"); // Opening the file in the local system.
 			
-			// R/W in local.
+			// Local R/W.
 
 			byte[] array = new byte[10000]; 				// Temporal buffer.
 
 			int leido = is.read(array);
 
-			while (leido > 0) {								// we go through the  file.
+			while (leido > 0) {								// Reading the file.
 				fos.write(array, 0, leido);
 				leido = is.read(array);
 			}
 
-			// it closes the file and the url conection since we finish the process.
-
 			is.close();
 			fos.close();
 
-			// Using an external library, It Calculates the SHA-3 256 hash code 
-			// 
+			// Calculating the SHA-3 256 hash code.
 			
 			File file = new File(tempFolder + "/temp.xml");		// XBRL report file.
 
@@ -77,21 +87,33 @@ public class Algorithm {
 			Path filePath = Paths.get(file.getAbsolutePath());	// Path.
 			byte[] fileBytes = Files.readAllBytes(filePath);	// Bytes.
 
+			/*
+			MessageDigest md = MessageDigest.getInstance("SHA3-256");	// This code does not work. 
+			md.update(fileBytes);										// Later Java version required.
+			byte sha3Bytes[] = md.digest();
+			hash_code = getHexadecimal(sha3Bytes);
+			*/
 			
 			Security.addProvider(new BouncyCastleProvider());	// BouncyCastle hash generator.
 			DigestSHA3 digestSHA3 = new SHA3.Digest256();		// SHA3 256.
 			digestSHA3.update(fileBytes);						// Getting the hash code.
 			hash_code = Hex.toHexString(digestSHA3.digest());	// To string...
 
-			// We add an error control
+			// Error control.
 			
 			if (hash_code.equals("a7ffc6f8bf1ed76651c14756a061d662f580ff4de43b49fa82d80a4b80f8434a")) {
 				System.out.print(" - Attention: Empty XML file! - ");
 			}
 			
-		} catch (MalformedURLException e) {e.printStackTrace();
-		} catch (UnknownHostException e) {e.printStackTrace();
-		} catch (IOException e) {e.printStackTrace();
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+			LogManager.writeLog(e, e.getMessage());
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+			LogManager.writeLog(e, e.getMessage());
+		} catch (IOException e) {
+			e.printStackTrace();
+			LogManager.writeLog(e, e.getMessage());
 		//} catch (NoSuchAlgorithmException e) {e.printStackTrace();
 		}
 
@@ -99,9 +121,9 @@ public class Algorithm {
 	}
 
 	/**
-	 * The Method functionality is to calculate the hexadecimal of an array of byte.
-	 * We use a external library as a replacement for this method
-	 * It should  be reused in the future.
+	 * The method functionality is to calculate the hexadecimal of an array of byte.
+	 * It has been replaced by the library method.
+	 * It could be reused in the future.
 	 * 
 	 * @deprecated
 	 * @param sha3Bytes (byte[])

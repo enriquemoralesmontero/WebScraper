@@ -2,18 +2,18 @@ package launcher;
 
 import java.util.ArrayList;
 
-import database.classes.DataBaseManager;
-import webscraping.collectors.Scraper;
-import webscraping.extracteddata.objects.RegistryCNMV;
+import database.DataBaseManager;
+import webscraping.RegistryCNMV;
+import webscraping.Scraper;
 
 /**
  * The main class that runs the entire project.
  * 
- * @author	Enrique Morales Montero
- * @author	Javier Mora Gonzálbez (project manager)
- * @author	Carlos Cano Ladera (guiding with app design, development and documentation)
+ * @author	Enrique Morales Montero (design, development, documentation)
+ * @author	Javier Mora Gonzálbez (mentor and requirements analyst)
+ * @author	Carlos Cano Ladera (mentor, guiding with design, development and documentation)
  * @since	28/3/2019
- * @version	3/4/2019
+ * @version	8/4/2019
  */
 public class MainLauncher {
 	
@@ -23,17 +23,27 @@ public class MainLauncher {
 	public static final String webURL = "http://cnmv.es/Portal/Consultas/IFI/ListaIFI.aspx?XBRL=S";
 	
 	/**
-	 * This is the main method in the app
-	 * It follows some steps
+	 * This is the main method in the app.
+	 * 
+	 * This functionality aim is the addition of the new data from the CNMV website (<a href="http://cnmv.es/Portal/Consultas/IFI/ListaIFI.aspx?XBRL=S">link here</a>).
+	 * The first time the process is executed, all the information is collected.
+	 * The subsequent executions only retrieve the new data, since new registries are found.
+	 * The program goes through a registry list at the CNMV website.
+	 * It stops the web crawling as the first registry in the database match with the next registry in the website.
+	 * Conversely, if the database is empty, the function ignores this step due to the fact that we need to gather whole data.
+	 * 
+	 * It follows some steps:
 	 * 
 	 * <ol>
-	 * <li>	First. Take the first registry from the database.	</li>
-	 * <li>	Second. Extract the targeted data from the Web (web scraping).	</li>
-	 * <li>	Third. List the extracted data.					</li>
-	 * <li>	Finally. Store the retrieved data in the database.	</li>
+	 * <li>	Take the first registry in the database.	</li>
+	 * <li>	Extract data from the Web (web scraping).	</li>
+	 * <li>	List the extracted data.					</li>
+	 * <li>	Store the extracted data in the database.	</li>
 	 * </ol>
 	 * 
 	 * @param args - They are not necessary.
+	 * 
+	 * @see <a href="http://cnmv.es/Portal/Consultas/IFI/ListaIFI.aspx?XBRL=S">CNMV website</a>
 	 */
 	public static void main(String[] args) {
 
@@ -42,22 +52,12 @@ public class MainLauncher {
 		System.out.println(" · Starting...\n");
 
 		
-		//Mira este ejemplo en ingles a ver que te parece, lo hago asi mejor
-		
-		//Mete manejo de excepciones y log.
-		
 		// 1 - Getting the first registry from the database.
 		//
-		// this functionality aim is the addition of the new data in the website.
-		// The first time we run the process we gather all the information from 
-		// the website. The subsequent executions only retrieve the new data, since
-		// we find in the cnmv website new registries. We go through a registry list at
-		// the cnmv web site. We stop the web crawling as the 
-		// first registry in  our database match with the next registry in our cnmv website 
-		// . Conversely, if the database is empty, the function ignore 
-		// this step due to the fact that we need to gather the whole data
+		// It serves to avoid having to review all the data on the website.
+		// If the database is empty, the program ignores this step.
 		
-		DataBaseManager mysql = new DataBaseManager();						// MySQL database.
+		DataBaseManager mysql = new DataBaseManager();			// MySQL database.
 		String lastUrlInfoContext = "NULL";
 		
 		if (mysql.hasRegistries()) {							// The database is not empty.
@@ -68,9 +68,8 @@ public class MainLauncher {
 		
 		// 2 - Web scraping.
 		//
-		// As we go through  the cnmv web site, the program store each data registry in a list
-		// Reminding what we stated before, we store registries until a registry match with the most recent
-		// data in the database 
+		// As we go through the CNMV website, the program store each data registry in a list.
+		// Reminding what we stated before, we store registries until a registry match with the most recent data in the database.
 		
 		System.out.println("\n · Scraping data...");
 		
@@ -79,8 +78,8 @@ public class MainLauncher {
 		
 		// 3 - Listing scraped data.
 		//
-		// In order to inform about our progress we list the new data row by row at the console
-		// Only if there are new data available
+		// In order to inform about our progress, we list the new data row by row at the console.
+		// Only if there are new data available.
 		// In other case we skip this step.
 		
 		System.out.println("\n\n · New registries in CNMV: " + list.size() + "\n");
@@ -94,9 +93,8 @@ public class MainLauncher {
 			
 			// 4 - Storage in the MySQL database.
 			//
-			// At this point we have already gathered all the new information available.
-			// Hence, our code add the new data in our MySQL database.
-			// 
+			// The data is stored in order if it is not already in the database.
+			// If there is no new data, this process is omitted.
 			
 			System.out.println("\nInserting in the database...\n");
 			mysql.store(list);						// Storing extracted data...
