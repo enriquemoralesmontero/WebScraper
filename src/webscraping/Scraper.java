@@ -1,5 +1,7 @@
 package webscraping;
 
+import static log.LogManager.writeLog;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import org.jsoup.Connection.Response;
@@ -217,6 +219,7 @@ public class Scraper {
 	    	
 	    } catch (IOException ex) {
 	    	System.err.println("Exception when getting the Status Code: " + ex.getMessage());
+	    	writeLog(ex, "IO exception when getting the Status Code...");
 	    }
 	    
 	    return response.statusCode();
@@ -258,7 +261,7 @@ public class Scraper {
 	}
 	
 	/**
-	 * Method that returns a Document with the HTML content of the web.
+	 * The method that returns a Document with the HTML content of the web.
 	 * It allows the application of JSoup methods on it.
 	 * Attention! If in a hundred seconds HTML is not detected, the connection must be checked!
 	 * 
@@ -275,7 +278,8 @@ public class Scraper {
 		try {
 		    doc = Jsoup.connect(webURL).userAgent("Mozilla/5.0").timeout(100000).get();
 		} catch (IOException ex) {
-			System.err.println("Exception when getting the HTML of the page: " + ex.getMessage());
+			System.err.println("IO exception when getting the HTML of the page: " + ex.getMessage());
+			writeLog(ex, "IO exception when getting the HTML of the page...");
 			System.exit(1);
 		}
 		
@@ -283,4 +287,3 @@ public class Scraper {
 	}
 	
 }
-
