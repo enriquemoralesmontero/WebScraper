@@ -6,7 +6,17 @@ import org.junit.Test;
 import cryptography.Algorithm;
 
 public class AlgorithmCNMVTest {
-	
+
+/**
+ * JUnit unit test to check the hascode generator class
+ * 
+ * @author	Enrique Morales Montero
+ * @author	Javier Mora Gonzálbez (project manager)
+ * @author	Carlos Cano Ladera (Designer, code reviewer)
+ * @since	29/3/2019
+ * @version	3/4/2019
+ */
+
 	@Test
 	public void testGenerateSHA3_256() {
 		

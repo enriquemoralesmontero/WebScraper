@@ -4,19 +4,20 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 /**
- * A web crawler, sometimes called a web-spider or spiderbot.
- * The spider enters the hypertext links and continues to extract data from there.
+ * A web crawler, sometimes called a web-spider or spiderbot, is a program that
+ * accedes to any individual link and extracts all the necessary data 
+ * for each cnmv record we need to store and secure.
  * 
  * @author Enrique Morales Montero
  * @since 28/3/2019
- * @version 5/4/2019
+ * @version 3/4/2019
  */
 public class Crawler {
 	
 	// Fields.
 	
 	/**
-	 * JSoup object with the web page HTML code.
+	 * JSoup object with the HTML of the web page.
 	 * The web spider will extract data from this web page.
 	 */
 	private Document docHTML;
@@ -32,24 +33,22 @@ public class Crawler {
 	// Setters and getters.
 	
 	/**
-	 * Procedure to set the HTML document.
-	 * The web spider will extract data from this web page.
+	 * Procedure that fixes the targeted HTML document.
+	 * The web spider  extracts data from the configured program.
 	 * 
-	 * @param doc - JSoup object with the web page HTML code.
+	 * @param doc - JSoup object with the HTML of the web page.
 	 */
 	public void setDocHMTL(final Document doc) {this.docHTML = doc;}
 	
-	/**
-	 * <p>	This function collects information from the document.									</p>
+	/*
+	 * <p> This	function collects the information we pass as a parameter from the document.										</p>
 	 * <p>	It extracts the plain text that is placed between the tags whose attribute "id" is "ID".</p>
 	 * <p>	Example:																				</p>
 	 * <p>		HTML 									= <tag id="Parameter">31/01/2019</tag>		</p>
 	 * <p>		Results of getPlainText("Parameter") 	= "31/01/2019"								</p>
 	 * 
-	 * @param ID - Identifier of the searched tag (String).
-	 * @return The text that is between the searched tags (String).
-	 * @see Crawler#docHTML			docHTML			- HTML document.
-	 * @see Crawler#getAttrValue()	getAttrValue	- Analogous method.
+	 * @param ID -  HTML tag that we target (String).
+	 * @return String. The tag inner text (INNERHTML)  (String).
 	 */
 	public String getPlainText(final String ID) {
 						
@@ -62,18 +61,16 @@ public class Crawler {
 	}
 	
 	/**
-	 * <p>	This function collects information from the document.												</p>
-	 * <p>	It is analogous to getPlainText(), but with a particularity:										</p>
-	 * <p>	It extracts the value of the attribute "ATTRIBUTE" located on the label with id="ID".				</p>
+	 * <p>	This method collects information from the document.													</p>
+	 * <p>	It is similar to getPlainText(), but it has its own features:										</p>
+	 * <p>	It extracts the value from the attribute "ATTRIBUTE" located in the HTML tag with id equals to "ID".				</p>
 	 * <p>	Example:																							</p>
 	 * <p>		HTML 											= <tag id="Parameter" href="page.com"></tag>	</p>
 	 * <p>		Results of getAttrValue("Parameter", "href") 	= "page.com"									</p>
 	 * 
-	 * @param ID - Searched tag identifier (String).
-	 * @param ATTRIBUTE - Element the value will be collected from (String).
-	 * @return The value of the attribute called "ATTRIBUTE" (String).
-	 * @see Crawler#docHTML			docHTML			- HTML document.
-	 * @see Crawler#getPlainText()	getPlainText	- Analogous method.
+	 * @param ID - Tag Identifier  (String).
+	 * @param ATTRIBUTE - Targeted attribute inside the HTML tag (String).
+	 * @return String  HTML tag "ATTRIBUTE" value (String).
 	 */
 	public String getAttrValue(final String ID, final String ATTRIBUTE) {
 					

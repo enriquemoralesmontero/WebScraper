@@ -13,7 +13,7 @@ import webscraping.extracteddata.objects.RegistryCNMV;
  * @author	Javier Mora Gonzálbez (project manager)
  * @author	Carlos Cano Ladera (guiding with app design, development and documentation)
  * @since	28/3/2019
- * @version	5/4/2019
+ * @version	3/4/2019
  */
 public class MainLauncher {
 	
@@ -23,22 +23,14 @@ public class MainLauncher {
 	public static final String webURL = "http://cnmv.es/Portal/Consultas/IFI/ListaIFI.aspx?XBRL=S";
 	
 	/**
-	 * This is the main method in the app.
-	 * 
-	 * This functionality aim is the addition of the new data from the CNMV website.
-	 * The first time the process is executed, all the information is collected.
-	 * The subsequent executions only retrieve the new data, since new registries are found.
-	 * The program goes through a registry list at the CNMV website.
-	 * It stops the web crawling as the first registry in the database match with the next registry in the website.
-	 * Conversely, if the database is empty, the function ignore this step due to the fact that we need to gather whole data.
-	 * 
-	 * It follows some steps:
+	 * This is the main method in the app
+	 * It follows some steps
 	 * 
 	 * <ol>
-	 * <li>	Take the first registry in the database.	</li>
-	 * <li>	Extract data from the Web (web scraping).	</li>
-	 * <li>	List the extracted data.					</li>
-	 * <li>	Store the extracted data in the database.	</li>
+	 * <li>	First. Take the first registry from the database.	</li>
+	 * <li>	Second. Extract the targeted data from the Web (web scraping).	</li>
+	 * <li>	Third. List the extracted data.					</li>
+	 * <li>	Finally. Store the retrieved data in the database.	</li>
 	 * </ol>
 	 * 
 	 * @param args - They are not necessary.
@@ -50,12 +42,22 @@ public class MainLauncher {
 		System.out.println(" · Starting...\n");
 
 		
+		//Mira este ejemplo en ingles a ver que te parece, lo hago asi mejor
+		
+		//Mete manejo de excepciones y log.
+		
 		// 1 - Getting the first registry from the database.
 		//
-		// It serve to avoid having to review all the data on the website.
-		// If the database is empty, the program ignores this step.
+		// this functionality aim is the addition of the new data in the website.
+		// The first time we run the process we gather all the information from 
+		// the website. The subsequent executions only retrieve the new data, since
+		// we find in the cnmv website new registries. We go through a registry list at
+		// the cnmv web site. We stop the web crawling as the 
+		// first registry in  our database match with the next registry in our cnmv website 
+		// . Conversely, if the database is empty, the function ignore 
+		// this step due to the fact that we need to gather the whole data
 		
-		DataBaseManager mysql = new DataBaseManager();			// MySQL database.
+		DataBaseManager mysql = new DataBaseManager();						// MySQL database.
 		String lastUrlInfoContext = "NULL";
 		
 		if (mysql.hasRegistries()) {							// The database is not empty.
@@ -66,8 +68,9 @@ public class MainLauncher {
 		
 		// 2 - Web scraping.
 		//
-		// The data will be stored in a list of registries.
-		// All data is collected until it matches the last registry in the database.
+		// As we go through  the cnmv web site, the program store each data registry in a list
+		// Reminding what we stated before, we store registries until a registry match with the most recent
+		// data in the database 
 		
 		System.out.println("\n · Scraping data...");
 		
@@ -76,9 +79,9 @@ public class MainLauncher {
 		
 		// 3 - Listing scraped data.
 		//
-		// The data extracted by the web scraper will be displayed.
-		// They will be show by console.
-		// If there is no new data, this list is omitted.
+		// In order to inform about our progress we list the new data row by row at the console
+		// Only if there are new data available
+		// In other case we skip this step.
 		
 		System.out.println("\n\n · New registries in CNMV: " + list.size() + "\n");
 		
@@ -91,8 +94,9 @@ public class MainLauncher {
 			
 			// 4 - Storage in the MySQL database.
 			//
-			// The data is stored in order if it is not already in the database.
-			// If there is no new data, this process is omitted.
+			// At this point we have already gathered all the new information available.
+			// Hence, our code add the new data in our MySQL database.
+			// 
 			
 			System.out.println("\nInserting in the database...\n");
 			mysql.store(list);						// Storing extracted data...

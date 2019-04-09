@@ -12,30 +12,52 @@ import webscraping.extracteddata.objects.RegistryCNMV;
 
 /**
  * The class that collects the information from the requested web page.
+ * This program has to accede to two levels of an HyperText document
+ * 
+ * In the main website we have the summarized information for each company quarterly report. Anytime a report is given to
+ * the cnmv, the cnmv website manager adds this new report to his website. This is and individual record we partially store in
+ * the registryCNMV object
+ * 
+ * Each record in the html information has four fields and a link to the full report. This new page
+ * contains all the information needed about this quarterly report. And this is basically the information we need to store.
+ * Using the full report, we complete the data in the registryCNMV. Therefore, the object is entirely fill in, and it is ready to be stored. 
+ *
+ * 
+ * From the main website we store two fields that we use as primary keys in our database to identify this record and distinguish it from the rest.
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
  * 
  * @author Enrique Morales Montero
  * @since 29/3/2019
- * @version 5/4/2019
+ * @version 3/4/2019
  */
 public class Scraper {
 	
 	/**
-	 * This is the most important function of the scraper.
-	 * It is responsible for the following features:
+	 * This is the main class in our program, the controller. It manages
+	 * all the steps to complete our purpose (algorithm) and achieve our goal,
+	 * which is gathering and storing any new information the cnmv website 
+	 * offers about companies. Particularly, we target the accountability 
+	 * data usually provided each quarter   
+	 * It follows these steps:
 	 * 
 	 * <ol>
-	 * <li>	Instance a list.												</li>
-	 * <li>	Check correctness of the connection code to the web page (200).	</li>
-	 * <li>	Get the HTML document.											</li>
-	 * <li>	Treats the rows of the HTML table.								</li>
-	 * <li>	Instance a web crawler to enter the hyperlinks.					</li>
-	 * <li>	Loop to extract data from the rows and store them in the list.	</li>
+	 * <li>	Firstly, Instance a list.													</li>
+	 * <li>	Then, Check that the connection code to the web page is correct (200).	</li>
+	 * <li>	After that it gets the HTML document.												</li>
+	 * <li>	Treats the rows of the HTML table.									</li>
+	 * <li>	It goes on getting and instance of a web crawler to enter the hyperlinks.						</li>
+	 * <li>	An finally it goes through the cnmv list to extract data from the rows and store them in the list.		</li>
 	 * </ol>
 	 * 
 	 * @param webURL - Text string with the URL of the web page.
 	 * @param lastUrlInfoContext 
 	 * 
-	 * @see Scraper#getStatusConnectionCode() getStatusConnectionCode() - Method to check the connection code.
+	 * @see Scraper#getStatusConnectionCode() getStatusConnectionCode() - Method for checking the connection code.
 	 */
 	public static ArrayList<RegistryCNMV> getListOfInfoCNMV(final String webURL, final String lastUrlInfoContext) {
 		
@@ -63,8 +85,8 @@ public class Scraper {
 			
 			// 4 - Treats the rows of the HTML table.
 			//
-			// First essential work of web scraping!
-			// The first elements to be treated are the rows of the HTML table of the web page.
+			// Git process of the web scraping algorithm!
+			// The first elements treated are the HTML table rows in the main page.
 			// Searching for data...
             		
             Elements rows = document.select("tr"); 	// Rows obtained.
@@ -73,25 +95,26 @@ public class Scraper {
             
             // 5 - Instantiate the web crawler.
             //
-            // The web spider will be used to enter the hypertext links.
-            // This will continue the data collection within them.
+            // The web spider usesnthe crawler to get into each individual hypertext links that accedes to the full information
+            // associated with this cnmv company quarter economic information.
+            // This step completes  the data for each registry recorded in the collection.
             
             Crawler spiderBot = new Crawler();
             
             
             // 6 - Loop to extract data from the rows.
             //
-            // For each column taken, data is collected with the JSoup sentences.
+            // data is retrieved from the web within the JSoup's sentences.
             // It is not necessary to control all the rows.
-            // The loop will be abandoned if the registries found have already been previously inserted in the database.
-            // The extracted data is stored in an ArrayList.
+            // The loop finish as soon as the record presently extracted coincide with the most recent record in the database.
+            // Finally, are program stores each new gathered record  in an ArrayList.
             
             for (int i = 1; i < rows.size(); i++) {
             	
             	System.out.print("\n\t\t- Scanning... " + i + "/" + rows.size());
     			Element element = rows.get(i);						// Each element contains the row of the HTML table with its HTML information.
 
-    			// Starting of data collection with JSoup...:
+    			// getting Start with the data collection using JSoup library functions.:
     			
     			Element hyperlink = element.select("a").first();	// It contains the url_info_context. The spider will use it later.
     			
@@ -102,20 +125,20 @@ public class Scraper {
     			String url_info_context = hyperlink.attr("href").replace("../..", "http://cnmv.es/Portal");
     			String entityName = element.getElementsByAttributeValue("data-th", "Nombre del emisor").text();
     			
-    			// Optimization control:
-    			// 		If it matches the last registry in the database, it exits the loop.
-    			// 		Thus, it is not necessary to control all the registries of the CNMV's web.
+    			// Improved perfomace control:
+    			// 		If the last gathered information matches with  most recent record in the database, it gets out of the loop.
+    			// 		As it does so, it is not mandatory to have full awareness of changing and new  records of the CNMV's web.
     			
     			if (url_info_context.equals(lastUrlInfoContext)) {
-    				System.out.println(" [This registry matches the last one in the database] - Finishing the scraping...");
+    				System.out.println(" [This record matches the last one in the database] - Finishing the scraping...");
     				break;
     			}
     			
-    			// The spiderbot is asked to manage this web link.
+    			// It request the spiderbot to deal with a singular web link and retrieve the full information we need for each cnmw entry.
     			
     			spiderBot.setDocHMTL(getHtmlDocument(url_info_context));
     			
-    			// JSoup data extraction (with the spider):
+    			// the spider (using JSoup methods) extract the following data fields:
     			//	- url_ixbrl
     			//	- entityCode
     			//	- period_end
@@ -132,12 +155,12 @@ public class Scraper {
     			String oam = "CNMV";
     			String country = "ES";
     			
-    			// Some entities have made modifications in the XBRL report.
-    			// It must be controlled.
-    			// It happens rarely, but it might occur.
+    			// Some entities that are already stored in the database could be modified lately due to some changes in quarterly company reports.
+    			// Consequently our program needs to update this changes in our database. It barely happens, but it could occurs occasionally.
+    			// We need to control this changes
     			
     			if (url_ixbrl == "NULL") {
-    				System.out.print(" (with modifications)");	// A text is shown to indicate that this registry was modified by the entity.
+    				System.out.print(" (with modifications)");	// A text is shown to indicate that this record was modified by the entity.
     				url_ixbrl = spiderBot.getAttrValue("ctl00_ContentPrincipal_ctl12_hlDescargaInforme", "href").replace("..", "http://cnmv.es/Portal");
     				entityCode = spiderBot.getPlainText("ctl00_ContentPrincipal_ctl11_lblNIFCont");
     				period_end = spiderBot.getPlainText("ctl00_ContentPrincipal_ctl11_lblFinPeriodoCont");
@@ -173,6 +196,7 @@ public class Scraper {
 	}
 		
 	/**
+	 * We need to check the website availability when we connect to it
 	 * Get the Status code of the response.
 	 * 
 	 * <ul>

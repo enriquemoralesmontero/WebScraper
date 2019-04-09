@@ -20,9 +20,9 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.encoders.Hex;
 
 /**
- * Class to generate the hash code.
+ * Algorithm is a class  that offers a set of algorithms to obtain the hash code.
  * 
- * @author Enrique Morales Montero
+ * @author Enrique Morales Monteroç
  * @since 2/4/2019
  * @version 3/4/2019 
  */
@@ -31,7 +31,7 @@ public class Algorithm {
 	final static String tempFolder = "./"; 
 	
 	/**
-	 * Function to generate the hash code.
+	 * Function that generates a hash code.  This has code is needed to identify our documents 
 	 * 
 	 * @param url_ixbrl
 	 * @return hash_code (String)
@@ -48,26 +48,27 @@ public class Algorithm {
 
 			URLConnection urlCon = url.openConnection();	// Connection: open.
 			
-			InputStream is = urlCon.getInputStream();		// Getting InputStream.
+			InputStream is = urlCon.getInputStream();		// Getting the InputStream.
 			FileOutputStream fos = new FileOutputStream(tempFolder + "/temp.xml"); // Opening the file in the local system.
 			
-			// Local R/W.
+			// R/W in local.
 
 			byte[] array = new byte[10000]; 				// Temporal buffer.
 
 			int leido = is.read(array);
 
-			while (leido > 0) {								// Reading file.
+			while (leido > 0) {								// we go through the  file.
 				fos.write(array, 0, leido);
 				leido = is.read(array);
 			}
 
-			// Closing objects.
+			// it closes the file and the url conection since we finish the process.
 
 			is.close();
 			fos.close();
 
-			// Calculating the SHA-3 256 hash code.
+			// Using an external library, It Calculates the SHA-3 256 hash code 
+			// 
 			
 			File file = new File(tempFolder + "/temp.xml");		// XBRL report file.
 
@@ -76,19 +77,13 @@ public class Algorithm {
 			Path filePath = Paths.get(file.getAbsolutePath());	// Path.
 			byte[] fileBytes = Files.readAllBytes(filePath);	// Bytes.
 
-			/*
-			MessageDigest md = MessageDigest.getInstance("SHA3-256");	// This code does not work. 
-			md.update(fileBytes);										// Later Java version required.
-			byte sha3Bytes[] = md.digest();
-			hash_code = getHexadecimal(sha3Bytes);
-			*/
 			
 			Security.addProvider(new BouncyCastleProvider());	// BouncyCastle hash generator.
 			DigestSHA3 digestSHA3 = new SHA3.Digest256();		// SHA3 256.
 			digestSHA3.update(fileBytes);						// Getting the hash code.
 			hash_code = Hex.toHexString(digestSHA3.digest());	// To string...
 
-			// Error control.
+			// We add an error control
 			
 			if (hash_code.equals("a7ffc6f8bf1ed76651c14756a061d662f580ff4de43b49fa82d80a4b80f8434a")) {
 				System.out.print(" - Attention: Empty XML file! - ");
@@ -104,9 +99,9 @@ public class Algorithm {
 	}
 
 	/**
-	 * Method used to calculate the hexadecimal equivalent from an array of bytes.
-	 * It has been replaced by the library method.
-	 * It could be reused in the future.
+	 * The Method functionality is to calculate the hexadecimal of an array of byte.
+	 * We use a external library as a replacement for this method
+	 * It should  be reused in the future.
 	 * 
 	 * @deprecated
 	 * @param sha3Bytes (byte[])
