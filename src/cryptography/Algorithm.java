@@ -18,8 +18,7 @@ import org.bouncycastle.jcajce.provider.digest.SHA3;
 import org.bouncycastle.jcajce.provider.digest.SHA3.DigestSHA3;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.encoders.Hex;
-
-import errorcontrol.LogManager;
+import static errorcontrol.LogManager.writeLog;
 
 /**
  * This class offers a set of algorithms to obtain the hash code.
@@ -107,13 +106,13 @@ public class Algorithm {
 			
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
-			LogManager.writeLog(e, e.getMessage());
+			writeLog(e, e.getMessage());
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
-			LogManager.writeLog(e, e.getMessage());
+			writeLog(e, e.getMessage());
 		} catch (IOException e) {
 			e.printStackTrace();
-			LogManager.writeLog(e, e.getMessage());
+			writeLog(e, e.getMessage());
 		//} catch (NoSuchAlgorithmException e) {e.printStackTrace();
 		}
 

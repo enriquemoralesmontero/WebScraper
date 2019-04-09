@@ -12,8 +12,8 @@ import java.io.PrintWriter;
  * @author	Enrique Morales Montero (design, development, documentation)
  * @author	Javier Mora Gonzálbez (mentor and requirements analyst)
  * @author	Carlos Cano Ladera (mentor, guiding with design, development and documentation)
- * @since 5/4/2019
- * @since 8/4/2019
+ * @since 	5/4/2019
+ * @version	8/4/2019
  */
 public class LogManager {
 	

@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * 
+ * A simple class to get the date and time.
  * 
  * @author	Enrique Morales Montero (design, development, documentation)
  * @author	Javier Mora Gonzálbez (mentor and requirements analyst)

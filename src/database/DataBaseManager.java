@@ -7,11 +7,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
-
 import com.mysql.jdbc.exceptions.jdbc4.CommunicationsException;
 import com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException;
-
-import errorcontrol.LogManager;
+import static errorcontrol.LogManager.writeLog;
 import webscraping.RegistryCNMV;
 
 /**
@@ -69,15 +67,15 @@ public class DataBaseManager {
 		} catch (CommunicationsException e) {
 			System.err.println("The database could not be accessed. It may be closed or the port must be controlled...");
 			e.printStackTrace();
-			LogManager.writeLog(e, "The database could not be accessed. It may be closed or the port must be controlled...");
+			writeLog(e, "The database could not be accessed. It may be closed or the port must be controlled...");
 		} catch (SQLException e) {
 			System.err.println(e.getMessage());
 			e.printStackTrace();
-			LogManager.writeLog(e, e.getMessage());
+			writeLog(e, e.getMessage());
 		} catch (ClassNotFoundException e) {
 			System.err.println("Class not found. Check the MySQL access driver...");
 			e.printStackTrace();
-			LogManager.writeLog(e, "Class not found. Check the MySQL access driver...");
+			writeLog(e, "Class not found. Check the MySQL access driver...");
 		}
 		
 	}
@@ -96,7 +94,7 @@ public class DataBaseManager {
 		} catch (SQLException e) {
 			System.err.println("Exception when closing the database...");
 			e.printStackTrace();
-			LogManager.writeLog(e, "Exception when closing the database...");
+			writeLog(e, "Exception when closing the database...");
 		}
 		
 	}
@@ -141,13 +139,13 @@ public class DataBaseManager {
 			System.err.println("SQL exception when consulting the number of registries that the database contains.");
 			System.err.println("The syntax of the SQL statement must be checked.");
 			e.printStackTrace();
-			LogManager.writeLog(e, "SQL exception when consulting the number of registries that the database contains. The syntax of the SQL statement must be checked.");
+			writeLog(e, "SQL exception when consulting the number of registries that the database contains. The syntax of the SQL statement must be checked.");
 			System.exit(1);
 		} catch (SQLException e) {
 			closeConection();
 			System.err.println("SQL exception when consulting the number of registries that the database contains...");
 			e.printStackTrace();
-			LogManager.writeLog(e, "SQL exception when consulting the number of registries that the database contains...");
+			writeLog(e, "SQL exception when consulting the number of registries that the database contains...");
 			System.exit(1);
 		}
 		
@@ -194,13 +192,13 @@ public class DataBaseManager {
 			System.err.println("SQL exception when consulting the last registry in the database...");
 			System.err.println("The syntax of the SQL statement must be checked.");
 			e.printStackTrace();
-			LogManager.writeLog(e, "SQL exception when consulting the last registry in the database. The syntax of the SQL statement must be checked.");
+			writeLog(e, "SQL exception when consulting the last registry in the database. The syntax of the SQL statement must be checked.");
 			System.exit(1);
 		} catch (SQLException e) {
 			closeConection();
 			System.err.println("SQL exception when consulting the last registry in the database...");
 			e.printStackTrace();
-			LogManager.writeLog(e, "SQL exception when consulting the last registry in the database...");
+			writeLog(e, "SQL exception when consulting the last registry in the database...");
 			System.exit(1);
 		}
 		
