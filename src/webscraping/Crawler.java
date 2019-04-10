@@ -11,7 +11,7 @@ import org.jsoup.nodes.Element;
  * @author	Javier Mora Gonzálbez (mentor and requirements analyst)
  * @author	Carlos Cano Ladera (mentor, guiding with design, development and documentation)
  * @since 	28/3/2019
- * @version 5/4/2019
+ * @version 9/4/2019
  */
 public class Crawler {
 	

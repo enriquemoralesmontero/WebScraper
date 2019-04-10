@@ -1,7 +1,7 @@
 package webscraping;
 
-import static log.LogManager.writeLog;
-
+import static log.LogManager.writeExceptionInLog;
+import static cryptography.Algorithm.generateSHA3_256;
 import java.io.IOException;
 import java.util.ArrayList;
 import org.jsoup.Connection.Response;
@@ -9,7 +9,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import cryptography.Algorithm;
 
 /**
  * <p>The class that collects the information from the requested web page.
@@ -29,10 +28,9 @@ import cryptography.Algorithm;
  * @author	Carlos Cano Ladera (mentor, guiding with design, development and documentation)
  * 
  * @since 	29/3/2019
- * @version 8/4/2019
+ * @version 9/4/2019
  * 
  * @see RegistryCNMV RegistryCNMV object
- * 
  */
 public class Scraper {
 	
@@ -119,12 +117,15 @@ public class Scraper {
     			String url_info_context = hyperlink.attr("href").replace("../..", "http://cnmv.es/Portal");
     			String entityName = element.getElementsByAttributeValue("data-th", "Nombre del emisor").text();
     			
+    			System.out.print("\t" + entityName);
+    			
     			// Improved performance control:
     			//		If the last gathered information matches with the most recent record in the database, it gets out of the loop.
     			//		As it does so, it is not mandatory to have full awareness of changing and new records of the CNMV's web.
     			
     			if (url_info_context.equals(lastUrlInfoContext)) {
-    				System.out.println(" [This registry matches the last one in the database] - Finishing the scraping...");
+    				System.out.println("\n\t\t\t\t\t- This registry (" + i + "/" + rows.size() + ") matches the last one in the database.");
+    				System.out.println("\t\t\t\t\t- Finishing the scraping...");
     				break;
     			}
     			
@@ -159,7 +160,7 @@ public class Scraper {
     			
     			for (int j = 11; j < 20 && url_ixbrl == "NULL"; j++) {
 
-    				System.out.print(" (with modifications)");	// A text is shown to indicate that this registry was modified by the entity.
+    				System.err.print(" (with modifications)");	// A text is shown to indicate that this registry was modified by the entity.
 					url_ixbrl = spiderBot.getAttrValue("ctl00_ContentPrincipal_ctl" + String.valueOf(j + 1) + "_hlDescargaInforme", "href").replace("..", "http://cnmv.es/Portal");
 					entityCode = spiderBot.getPlainText("ctl00_ContentPrincipal_ctl" + String.valueOf(j) + "_lblNIFCont");
 					period_end = spiderBot.getPlainText("ctl00_ContentPrincipal_ctl" + String.valueOf(j) + "_lblFinPeriodoCont");
@@ -169,7 +170,7 @@ public class Scraper {
     			// The last data:
     			//	- hash_code
     			
-    			String hash_code = Algorithm.generateSHA3_256(url_ixbrl);
+    			String hash_code = generateSHA3_256(url_ixbrl);
     			
     		    // Storing data in a list.
     		    
@@ -180,6 +181,8 @@ public class Scraper {
         } else {
         	int errorCode = getStatusConnectionCode(webURL);        	
         	System.err.println("Critical status code: " + errorCode + " - " + getMessageFromCode(errorCode));
+        	System.err.println("The webpage (" + webURL + ") cannot be accessed...");
+        	writeExceptionInLog(new Exception(), "The webpage (" + webURL + ") cannot be accessed...", "Scraper.getListOfInfoCNMV()");
         	System.exit(1);
         }
 		
@@ -204,7 +207,6 @@ public class Scraper {
 	 * </ul>
 	 * 
 	 * @param webURL - Text string with the URL of the web page.
-	 * 
 	 * @return Status Code (int).
 	 * 
 	 * @throws IOException
@@ -218,8 +220,8 @@ public class Scraper {
 	    	response = Jsoup.connect(webURL).userAgent("Mozilla/5.0").timeout(100000).ignoreHttpErrors(true).execute();
 	    	
 	    } catch (IOException ex) {
-	    	System.err.println("Exception when getting the Status Code: " + ex.getMessage());
-	    	writeLog(ex, "IO exception when getting the Status Code...");
+	    	System.err.println("Exception when getting the status code: " + ex.getMessage());
+	    	writeExceptionInLog(ex, "IO exception when getting the status code...", "Scraper.getStatusConnectionCode()");
 	    }
 	    
 	    return response.statusCode();
@@ -266,7 +268,6 @@ public class Scraper {
 	 * Attention! If in a hundred seconds HTML is not detected, the connection must be checked!
 	 * 
 	 * @param webURL - Text string with the URL of the web page.
-	 * 
 	 * @return Document HTML.
 	 * 
 	 * @throws IOException
@@ -279,7 +280,7 @@ public class Scraper {
 		    doc = Jsoup.connect(webURL).userAgent("Mozilla/5.0").timeout(100000).get();
 		} catch (IOException ex) {
 			System.err.println("IO exception when getting the HTML of the page: " + ex.getMessage());
-			writeLog(ex, "IO exception when getting the HTML of the page...");
+			writeExceptionInLog(ex, "IO exception when getting the HTML of the page...", "Scraper.getHtmlDocument()");
 			System.exit(1);
 		}
 		

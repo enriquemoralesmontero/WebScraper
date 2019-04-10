@@ -1,6 +1,6 @@
 package database;
 
-import static log.LogManager.writeLog;
+import static log.LogManager.writeExceptionInLog;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -23,7 +23,7 @@ import webscraping.RegistryCNMV;
  * @author	Javier Mora Gonzálbez (mentor and requirements analyst)
  * @author	Carlos Cano Ladera (mentor, guiding with design, development and documentation)
  * @since	29/3/2019
- * @version	5/4/2019
+ * @version	9/4/2019
  */
 public class DataBaseManager {
 	
@@ -69,15 +69,19 @@ public class DataBaseManager {
 		} catch (CommunicationsException e) {
 			System.err.println("The database could not be accessed. It may be closed or the port must be controlled...");
 			e.printStackTrace();
-			writeLog(e, "The database could not be accessed. It may be closed or the port must be controlled...");
+			writeExceptionInLog(e, "The database could not be accessed. It may be closed or the port must be controlled...", "DataBaseManager.openConection()");
+		} catch (MySQLSyntaxErrorException e) {
+			System.err.println(e.getMessage());
+			e.printStackTrace();
+			writeExceptionInLog(e, e.getMessage(), "DataBaseManager.openConection()");
 		} catch (SQLException e) {
 			System.err.println(e.getMessage());
 			e.printStackTrace();
-			writeLog(e, e.getMessage());
+			writeExceptionInLog(e, e.getMessage(), "DataBaseManager.openConection()");
 		} catch (ClassNotFoundException e) {
-			System.err.println("Class not found. Check the MySQL access driver...");
+			System.err.println("Class not found. Check the MySQL access driver and its string...");
 			e.printStackTrace();
-			writeLog(e, "Class not found. Check the MySQL access driver...");
+			writeExceptionInLog(e, "Class not found. Check the MySQL access driver and its string...", "DataBaseManager.openConection()");
 		}
 		
 	}
@@ -96,7 +100,7 @@ public class DataBaseManager {
 		} catch (SQLException e) {
 			System.err.println("Exception when closing the database...");
 			e.printStackTrace();
-			writeLog(e, "Exception when closing the database...");
+			writeExceptionInLog(e, "Exception when closing the database...", "DataBaseManager.closeConection()");
 		}
 		
 	}
@@ -141,13 +145,13 @@ public class DataBaseManager {
 			System.err.println("SQL exception when consulting the number of registries that the database contains.");
 			System.err.println("The syntax of the SQL statement must be checked.");
 			e.printStackTrace();
-			writeLog(e, "SQL exception when consulting the number of registries that the database contains. The syntax of the SQL statement must be checked.");
+			writeExceptionInLog(e, "SQL exception when consulting the number of registries that the database contains. The syntax of the SQL statement must be checked. " + e.getMessage(), "DataBaseManager.hasRegistries()");
 			System.exit(1);
 		} catch (SQLException e) {
 			closeConection();
 			System.err.println("SQL exception when consulting the number of registries that the database contains...");
 			e.printStackTrace();
-			writeLog(e, "SQL exception when consulting the number of registries that the database contains...");
+			writeExceptionInLog(e, "SQL exception when consulting the number of registries that the database contains..." + e.getMessage(), "DataBaseManager.hasRegistries()");
 			System.exit(1);
 		}
 		
@@ -194,13 +198,13 @@ public class DataBaseManager {
 			System.err.println("SQL exception when consulting the last registry in the database...");
 			System.err.println("The syntax of the SQL statement must be checked.");
 			e.printStackTrace();
-			writeLog(e, "SQL exception when consulting the last registry in the database. The syntax of the SQL statement must be checked.");
+			writeExceptionInLog(e, "SQL exception when consulting the last registry in the database. The syntax of the SQL statement must be checked." + e.getMessage(), "DataBaseManager.getLastUrlInfoContext()");
 			System.exit(1);
 		} catch (SQLException e) {
 			closeConection();
 			System.err.println("SQL exception when consulting the last registry in the database...");
 			e.printStackTrace();
-			writeLog(e, "SQL exception when consulting the last registry in the database...");
+			writeExceptionInLog(e, "SQL exception when consulting the last registry in the database..." + e.getMessage(), "DataBaseManager.getLastUrlInfoContext()");
 			System.exit(1);
 		}
 		
@@ -278,10 +282,12 @@ public class DataBaseManager {
 			sentence.close();
 			
 		} catch (SQLException e) {
-			System.err.println("SQL exception in the insertion.");
+			System.err.println("SQL exception in the data insertion.");
 			System.err.printf("Message  : %s %n", e.getMessage());
 			System.err.printf("SQL state: %s %n", e.getSQLState());
 			System.err.printf("Cod error: %s %n", e.getErrorCode());
+			writeExceptionInLog(e, "SQL exception in the data insertion..." + e.getMessage(), "DataBaseManager.storeRegistry()");
+			System.exit(1);
 		}
 		return rowsInserted;
 		

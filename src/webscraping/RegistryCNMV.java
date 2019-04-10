@@ -22,10 +22,10 @@ package webscraping;
  *      Most of the information we need to store is located in this link.
  *      From this field we take four fields:
  *      <ul>
- *      <li>	url_ixbrl (the XBRL report URL)												</li>  
- *      <li>	entityCode (the code of the company)										</li>
- *      <li>	period_end																	</li>
- *      <li>	form (type of XBRL taxonomy that matches the report)						</li>
+ *      <li>	url_ixbrl (the XBRL report URL)							</li>  
+ *      <li>	entityCode (the code of the company)					</li>
+ *      <li>	period_end												</li>
+ *      <li>	form (type of XBRL taxonomy that matches the report)	</li>
  *      </ul>
  * </ul>
  * 
@@ -38,7 +38,7 @@ package webscraping;
  * @author	Javier Mora Gonzálbez (mentor and requirements analyst)
  * @author	Carlos Cano Ladera (mentor, guiding with design, development and documentation)
  * @since 	28/3/2019
- * @version 8/4/2019
+ * @version 9/4/2019
  */
 public class RegistryCNMV {
 	

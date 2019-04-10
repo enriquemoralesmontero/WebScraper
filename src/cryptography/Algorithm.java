@@ -1,7 +1,6 @@
 package cryptography;
 
-import static log.LogManager.writeLog;
-
+import static log.LogManager.writeExceptionInLog;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -28,7 +27,7 @@ import org.bouncycastle.util.encoders.Hex;
  * @author	Javier Mora Gonzálbez (mentor and requirements analyst)
  * @author	Carlos Cano Ladera (mentor, guiding with design, development and documentation)
  * @since	2/4/2019
- * @version 5/4/2019 
+ * @version 8/4/2019 
  */
 public class Algorithm {
 	
@@ -107,13 +106,13 @@ public class Algorithm {
 			
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
-			writeLog(e, e.getMessage());
+			writeExceptionInLog(e, e.getMessage(), "Algorithm.generateSHA3_256()");
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
-			writeLog(e, e.getMessage());
+			writeExceptionInLog(e, e.getMessage(), "Algorithm.generateSHA3_256()");
 		} catch (IOException e) {
 			e.printStackTrace();
-			writeLog(e, e.getMessage());
+			writeExceptionInLog(e, e.getMessage(), "Algorithm.generateSHA3_256()");
 		//} catch (NoSuchAlgorithmException e) {e.printStackTrace();
 		}
 

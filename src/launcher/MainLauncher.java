@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import database.DataBaseManager;
 import webscraping.RegistryCNMV;
 import webscraping.Scraper;
+import static log.LogManager.writeListInLog;
 
 /**
  * The main class that runs the entire project.
@@ -13,7 +14,7 @@ import webscraping.Scraper;
  * @author	Javier Mora Gonzálbez (mentor and requirements analyst)
  * @author	Carlos Cano Ladera (mentor, guiding with design, development and documentation)
  * @since	28/3/2019
- * @version	8/4/2019
+ * @version	9/4/2019
  */
 public class MainLauncher {
 	
@@ -99,6 +100,8 @@ public class MainLauncher {
 			System.out.println("\nInserting in the database...\n");
 			mysql.store(list);						// Storing extracted data...
 		}	
+		
+		writeListInLog(list);
 		
 		milliseconds = (System.currentTimeMillis() - milliseconds) / 1000;
 		System.out.println("\n · Finish in " + milliseconds + " seconds!");
