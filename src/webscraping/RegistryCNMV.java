@@ -29,7 +29,7 @@ package webscraping;
  *      </ul>
  * </ul>
  * 
- * <p>The fields "format", "oam" and "country" have got the values "XBRL", "CNMV" and "ES".	</p>
+ * <p>The fields "format", "oam" and "country" have constant values:"XBRL","CNMV" and "ES".	</p>
  * 
  * We use this combine information to fill in each registry we create in an instance of this object (RegistryCNMV).
  * Actually, we insert this object as a row in our database.

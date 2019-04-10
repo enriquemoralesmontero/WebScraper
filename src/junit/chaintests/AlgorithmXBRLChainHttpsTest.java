@@ -20,7 +20,7 @@ public class AlgorithmXBRLChainHttpsTest {
 	public void testGenerateSHA3_256() {
 		
 		/**
-		 * From XBRLchain with https.
+		 * The URL report origin is XBRLchain. In this case we use a safety connection https.
 		 */
 		final String url_ixbrl = "https://www.sec.gov/Archives/edgar/data/1613780/000119312519094497/dbvt-20181231.xml";
 		

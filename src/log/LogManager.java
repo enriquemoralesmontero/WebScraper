@@ -8,8 +8,14 @@ import java.util.ArrayList;
 import webscraping.RegistryCNMV;
 
 /**
- * The class that captures exceptions and errors.
- * It saves them in a log file.
+ *
+ * The LogManager has two functions:
+ * 
+ * First, It works as a history record. It means that LogManager keeps information about each
+ * execution in ScrapingHistory.log file .
+ * 
+ * Second, the class catch exceptions and errors. After that, it saves them in ErrorHistory.log file.
+ * 
  * 
  * @author	Enrique Morales Montero (design, development, documentation)
  * @author	Javier Mora Gonzálbez (mentor and requirements analyst)
@@ -23,15 +29,16 @@ public class LogManager {
 	private static final String EXCEPTIONS_FILE_PATH = "ErrorHistory.log";
 	
 	/**
-	 * The procedure that creates the file where the log is stored if it does not exist.
+	 * This procedure creates the history and log files.
 	 * 
+	 * @param PATH, This is the file path in a String.
 	 * @return File
 	 * @throws IOException
 	 * @see LogManager#writeAttentionInLog() writeLog() - Method that uses this function.
 	 */
-	private static File getFileLog() throws IOException {
+	private static File getFileLog(final String PATH) throws IOException {
 		
-		File file = new File(FILE_PATH);
+		File file = new File(PATH);
 		
 		if (!file.exists()) {
 			file.createNewFile();
@@ -41,30 +48,13 @@ public class LogManager {
 	}
 	
 	/**
-	 * The procedure that creates the file where the log is stored if it does not exist.
-	 * 
-	 * @return File
-	 * @throws IOException
-	 * @see LogManager#writeAttentionInLog() writeLog() - Method that uses this function.
-	 */
-	private static File getFileExceptionsLog() throws IOException {
-		
-		File file = new File(EXCEPTIONS_FILE_PATH);
-		
-		if (!file.exists()) {
-			file.createNewFile();
-		}
-		
-		return file;
-	}
-	
-	/**
-	 * A public procedure that stores the following data in the file:
+	 * A public procedure  stores the following data in ErrorHistory.log file:
+	 * The set of information includes 
 	 * <ul>
-	 * <li>		Day, month and year.							</li>
-	 * <li>		Hour, minutes and seconds.						</li>
+	 * <li>		Date.							</li>
+	 * <li>		Time .						</li>
 	 * <li>		Type of exception.								</li>
-	 * <li>		Location of the code that causes the exception.	</li>
+	 * <li>		the code that throws the exception.	</li>
 	 * </ul>
 	 */
 	public static void writeExceptionInLog(Exception exception, String message, String classAndMethod) {
@@ -75,7 +65,7 @@ public class LogManager {
 		
 		try {
 
-			FileWriter fileWriter = new FileWriter(getFileExceptionsLog(), true);
+			FileWriter fileWriter = new FileWriter(getFileLog(EXCEPTIONS_FILE_PATH), true);
 			PrintWriter printWriter = new PrintWriter(fileWriter);
 
 			printWriter.println("EXCEPTION!");
@@ -97,12 +87,13 @@ public class LogManager {
 	}
 	
 	/**
-	 * A public procedure that stores the following data in the file:
+	 * A public procedure  stores the following data in ErrorHistory.log file:
+	 * The set of information includes 
 	 * <ul>
-	 * <li>		Day, month and year.							</li>
-	 * <li>		Hour, minutes and seconds.						</li>
-	 * <li>		Number of new registries.						</li>	
-	 * <li>		List of new entityNames inserted.				</li>
+	 * <li>		DAte							</li>
+	 * <li>		Time						</li>
+	 * <li>		Number of new records.						</li>	
+	 * <li>		List of new entityNames inserted (company names).				</li>
 	 * </ul>
 	 */
 	public static void writeListInLog(ArrayList<RegistryCNMV> list) {
@@ -111,7 +102,7 @@ public class LogManager {
 		
 		try {
 
-			FileWriter fileWriter = new FileWriter(getFileLog(), true);
+			FileWriter fileWriter = new FileWriter(getFileLog(FILE_PATH), true);
 			PrintWriter printWriter = new PrintWriter(fileWriter);
 
 			printWriter.println("NEW SCRAPING ACTION!");
@@ -141,8 +132,8 @@ public class LogManager {
 	 * A public procedure that stores the following data in the file:
 	 * <ul>
 	 * <li>		Error message.									</li>
-	 * <li>		Day, month and year.							</li>
-	 * <li>		Hour, minutes and seconds.						</li>
+	 * <li>		Date							</li>
+	 * <li>		Time 						</li>
 	 * </ul>
 	 */
 	public static void writeAttentionInLog() {
@@ -151,7 +142,7 @@ public class LogManager {
 		
 		try {
 
-			FileWriter fileWriter = new FileWriter(getFileLog(), true);
+			FileWriter fileWriter = new FileWriter(getFileLog(FILE_PATH), true);
 			PrintWriter printWriter = new PrintWriter(fileWriter);
 
 			printWriter.println("ATTENTION!");

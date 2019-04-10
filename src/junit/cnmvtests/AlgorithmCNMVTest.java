@@ -20,7 +20,7 @@ public class AlgorithmCNMVTest {
 	public void testGenerateSHA3_256() {
 		
 		/**
-		 * From CNMV web (Telepizza report).
+		 * Telepizza report example extracted from  CNMV web site. The url is just in the url_ixbrl constant ).
 		 */
 		final String url_ixbrl = "http://cnmv.es/Portal/Consultas/wuc/DescargaXBRLIPP.ashx?t={13b380b8-dc7a-4c0e-81d3-f80fafd904c8}";
 		

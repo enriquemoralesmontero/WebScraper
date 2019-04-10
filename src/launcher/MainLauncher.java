@@ -28,9 +28,10 @@ public class MainLauncher {
 	 * 
 	 * This functionality aim is the addition of the new data from the CNMV website (<a href="http://cnmv.es/Portal/Consultas/IFI/ListaIFI.aspx?XBRL=S">link here</a>).
 	 * The first time the process is executed, all the information is collected.
-	 * The subsequent executions only retrieve the new data, since new registries are found.
-	 * The program goes through a registry list at the CNMV website.
-	 * It stops the web crawling as the first registry in the database match with the next registry in the website.
+	 * The subsequent executions only retrieve the new data, only  new registries are collected and saved.
+	 * The program goes through a registry list (HTML table) in the CNMV website.
+	 * We go through the website list from the newest rows in the table to the oldest.
+	 * The scraper stops the web crawling as the first registry in the database match with the next registry readed from the website.
 	 * Conversely, if the database is empty, the function ignores this step due to the fact that we need to gather whole data.
 	 * 
 	 * It follows some steps:
@@ -70,35 +71,40 @@ public class MainLauncher {
 		// 2 - Web scraping.
 		//
 		// As we go through the CNMV website, the program store each data registry in a list.
-		// Reminding what we stated before, we store registries until a registry match with the most recent data in the database.
+		// Reminding what we stated before, we store records until a registry match with the most recent data in the database.
 		
 		System.out.println("\n · Scraping data...");
 		
-		ArrayList<RegistryCNMV> list = Scraper.getListOfInfoCNMV(webURL, lastUrlInfoContext);	// Getting the list of data extracted by the web scraper.
+		
+		// Getting the list of data extracted by the web scraper.
+		ArrayList<RegistryCNMV> list = Scraper.getListOfInfoCNMV(webURL, lastUrlInfoContext);	
 		
 		
 		// 3 - Listing scraped data.
 		//
-		// In order to inform about our progress, we list the new data row by row at the console.
+		// In order to inform about our progress, we list the new data row by row on the console.
 		// Only if there are new data available.
 		// In other case we skip this step.
 		
 		System.out.println("\n\n · New registries in CNMV: " + list.size() + "\n");
 		
-		if (list.size() > 0) {						// If the list is not empty.
+		// it checks whether the list contains records.
+		if (list.size() > 0) {						
 			
-			for (int i = 0; i < list.size(); i++) {	// Loop to show all the data in the list.
+			// Loop to show all the data in the list.
+			for (int i = 0; i < list.size(); i++) {	
 				System.out.println(list.get(i));
 			}
 			
 			
 			// 4 - Storage in the MySQL database.
 			//
-			// The data is stored in order if it is not already in the database.
-			// If there is no new data, this process is omitted.
+			// We store data sorted by time. Most recent records are placed at the end. Only if they are not already at the database.
+			// If we do not find new data, this process is skipped.
 			
 			System.out.println("\nInserting in the database...\n");
-			mysql.store(list);						// Storing extracted data...
+			// this instruction stores the gathered data...
+			mysql.store(list);	
 		}	
 		
 		writeListInLog(list);

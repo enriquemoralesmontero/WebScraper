@@ -4,8 +4,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 /**
- * A web crawler, sometimes called a web-spider or spiderbot.
- * It is a program that accedes to any individual link and extracts all the necessary data for each CNMV record we need to store and secure.
+ * A web crawler, also called a web-spider or spiderbot.
+ * This is a program that accedes to any quarterly report individual link (page) and extracts all the necessary data 
+ * for each CNMV record we need to store and secure in our database.
  * 
  * @author	Enrique Morales Montero (design, development, documentation)
  * @author	Javier Mora Gonzálbez (mentor and requirements analyst)
@@ -18,7 +19,7 @@ public class Crawler {
 	// Fields.
 	
 	/**
-	 * JSoup object with the HTML of the web page.
+	 * The JSoup object references a company completed financial report   .
 	 * The web spider will extract data from this web page.
 	 */
 	private Document docHTML;
@@ -26,7 +27,7 @@ public class Crawler {
 	// Constructor.
 	
 	/**
-	 * Simple constructor.
+	 * Class constructor.
 	 * It is only used to instantiate the object.
 	 */
 	public Crawler() {}
@@ -34,8 +35,8 @@ public class Crawler {
 	// Setters and getters.
 	
 	/**
-	 * The procedure that fixes the targeted HTML document.
-	 * The web spider extracts data from the configured program.
+	 * The procedure fixes the targeted HTML document.The web spider uses the HTML DOM tree to gather
+	 *  the financial data. We use the JSoup class to go through the HTML DOM Tree.
 	 * 
 	 * @param doc - JSoup object with the web page HTML code.
 	 */
@@ -43,13 +44,13 @@ public class Crawler {
 	
 	/**
 	 * <p>	This function collects the information we pass as a parameter from the document.		</p>
-	 * <p>	It extracts the plain text that is placed between the tags whose attribute "id" is "ID".</p>
+	 * <p>	Consequently, It extracts the plain text that is placed between the tags whose attribute "id" is "ID".</p>
 	 * <p>	Example:																				</p>
 	 * <p>		HTML 									= <tag id="Parameter">31/01/2019</tag>		</p>
 	 * <p>		Results of getPlainText("Parameter") 	= "31/01/2019"								</p>
 	 * 
-	 * @param ID - Identifier of the searched tag (String).
-	 * @return The text that is between the searched tags (String).
+	 * @param ID -  targeted tag identifier attribute(String).
+	 * @return The text between the targeted tags (String).
 	 * @see Crawler#docHTML			docHTML			- HTML document.
 	 * @see Crawler#getAttrValue()	getAttrValue	- Analogous method.
 	 */
@@ -65,25 +66,26 @@ public class Crawler {
 	
 	/**
 	 * <p>	This function collects information from the document.												</p>
-	 * <p>	It is similar to getPlainText(), but it has its own features:										</p>
+	 * <p>	This method is similar to getPlainText(), but it has its own features:								</p>
 	 * <p>	It extracts the value from the attribute "ATTRIBUTE" located in the HTML tag with id equals to "ID".</p>
 	 * <p>	Example:																							</p>
 	 * <p>		HTML 											= <tag id="Parameter" href="page.com"></tag>	</p>
 	 * <p>		Results of getAttrValue("Parameter", "href") 	= "page.com"									</p>
 	 * 
-	 * @param ID - Searched tag identifier (String).
-	 * @param ATTRIBUTE - Element the value will be collected from (String).
-	 * @return The value of the attribute called "ATTRIBUTE" (String).
+	 * @param ID - Tag identifier (String).
+	 * @param ATTRIBUTE - This attribute  contains the value we are looking for.
+	 * @return String. The attribute "ATTRIBUTE" value.
 	 * @see Crawler#docHTML			docHTML			- HTML document.
 	 * @see Crawler#getPlainText()	getPlainText	- Analogous method.
 	 */
 	public String getAttrValue(final String ID, final String ATTRIBUTE) {
 					
-		Element element = docHTML.getElementById(ID);	// Getting the tag with id="ID"...
+		// Get the tag with id="ID"...
+		Element element = docHTML.getElementById(ID);	
 		
 		if (element == null) {return "NULL";}
-		
-		String value = element.attr(ATTRIBUTE);			// Getting the value of the attribute called "ATTRIBUTE" (ATTRIBUTE="value")...
+		// Get the attribute value passed as a parameter( "ATTRIBUTE"). (ATTRIBUTE="value")...
+		String value = element.attr(ATTRIBUTE);			
 		return value;
 	}
 }

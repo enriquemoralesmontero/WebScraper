@@ -14,14 +14,16 @@ import org.jsoup.select.Elements;
  * <p>The class that collects the information from the requested web page.
  * This program has to accede to two levels of a HyperText document.</p>
  * 
- * <p>In the main website, we have the summarized information for each company quarterly report.
+ * <p>In the main website, we find rows in a table. Each row summarizes information for a company quarterly report.
  * Anytime a report is given to the CNMV, the CNMV website manager adds this new report to his website.
- * This is an individual record we partially store in the RegistryCNMV object.</p>
+ * This is an individual record we partially store in the RegistryCNMV object.
+ * 
+ * To see details about this information you can redirect to the registryCNMV commentaries section </p>
  * 
  * <p>Each record in the HTML information has four fields and a link to the full report.
- * This new page contains all the information needed about this quarterly report.
+ * This new page (link) contains all the full report information.
  * Using the full report, we complete the data in the RegistryCNMV.
- * Therefore, the object is entirely filled in, and it is ready to be stored.</p>
+ * Therefore, the object is entirely filled in, and finally, it is ready to be stored at the database/p>
  * 
  * @author	Enrique Morales Montero (design, development, documentation)
  * @author	Javier Mora Gonzálbez (mentor and requirements analyst)
@@ -42,9 +44,11 @@ public class Scraper {
 	 * <li>	Instance a list.													</li>
 	 * <li>	Check that the connection code to the web page is correct. (200).	</li>
 	 * <li>	Get the HTML document.												</li>
-	 * <li>	Treats the rows of the HTML table.									</li>
-	 * <li>	It goes on getting and instance of a web crawler to enter the hyperlinks.</li>
-	 * <li>	It goes through the CNMV list to extract data from the rows and store them in the list.</li>
+	 * <li>	Treats a row of the HTML table (a full report summary) . And get the full report link</li>
+	 * <li>	It goes on getting and instance of a web crawler to enter the full report link.</li>
+	 * <li> Put all the information in a new RegistryCNMV object. And then we add the object to the ArrayList
+	 * <li>	It continuous with the next row, until the row information match with the most recent record in the database</li>
+	 * <li> As a result, as the loop finishes, we have an ArrayList that gathers all the new reports.
 	 * </ol>
 	 * 
 	 * @param webURL - Text string with the URL of the web page.
@@ -64,24 +68,25 @@ public class Scraper {
 		
 		// 2 - Checking the connection code.
 		//
-		// It checks if the code is 200 when making the request.
-		// If there is a bad connection to the website, it will give a code other than 200 (400, 404...)
+		// First we check whether the request return the code 200 (Ok code).
+		// If the URL connection fails, it  returns a error code (400, 404...)
 		
 		System.out.println("\n\tThis task may take a while.");
 		
 		if (getStatusConnectionCode(webURL) == 200) {		
 
 			
-			// 3 - Getting the HTML document.
+			// 3 - It gets the HTML document.
 			//
-			// The HTML of the web is obtained in a Document object.
+			// We assign the HTML Code (DOM TREE) to he the  Html document variable .
 			
 			Document document = getHtmlDocument(webURL); 	
 
 			
-			// 4 - Treats the rows of the HTML table.
+			// 4 -We Deal with each row  and extract the summary report info (including each link to
+			// the full report)
 			//
-			// Searching for data...
+			// 
             		
             Elements rows = document.select("tr"); 	// Rows obtained.
             System.out.println("\n\tElements: " + rows.size() + " registries.");
@@ -89,18 +94,19 @@ public class Scraper {
             
             // 5 - Instantiate the web crawler.
             //
-            // The web spider gets into each individual hypertext links with the full information associated with this CNMV company quarter economic information.
+            // The web spider gets into each individual hypertext links. As a reminder, each link             
+            //contains the full information associated with this CNMV company quarter financial information.
             // This step completes the data for each registry recorded in the collection.
             
             Crawler spiderBot = new Crawler();
             
             
-            // 6 - Loop to extract data from the rows.
+            // 6 - Go through all the rows in the tabla to get data from each report .
             //
-            // Data is retrieved from the web within the JSoup's sentences.
-            // It is not necessary to control all the rows.
+            // We use the JSoup library to recover information from the DOM tree.
+            // It is not mandatory to inspect each row.
             // The loop finishes as soon as the record presently extracted matches the most recent record in the database.
-            // Finally, are program stores each new gathered record in an ArrayList.
+            // Finally, our program add each new gathered record in an ArrayList.
             
             for (int i = 1; i < rows.size(); i++) {
             	
@@ -121,7 +127,7 @@ public class Scraper {
     			
     			// Improved performance control:
     			//		If the last gathered information matches with the most recent record in the database, it gets out of the loop.
-    			//		As it does so, it is not mandatory to have full awareness of changing and new records of the CNMV's web.
+    			//		As it does so, it is not mandatory to have check for changes and new records of the CNMV's web.
     			
     			if (url_info_context.equals(lastUrlInfoContext)) {
     				System.out.println("\n\t\t\t\t\t- This registry (" + i + "/" + rows.size() + ") matches the last one in the database.");
@@ -129,8 +135,9 @@ public class Scraper {
     				break;
     			}
     			
-    			// It requests the spiderbot to deal with a singular web link and retrieve the full information we need for each CNMV entry.
-    			
+    			// It requests the spiderbot to deal with a singular web link (full report page)
+    			//and retrieve the full information we need for each CNMV entry.
+    			 
     			spiderBot.setDocHMTL(getHtmlDocument(url_info_context));
     			
     			// The spider extracts the following data fields::
@@ -153,10 +160,13 @@ public class Scraper {
     			String oam = "CNMV";
     			String country = "ES";
     			
-    			// Some entities that are already stored in the database could be modified lately due to some changes in quarterly company reports.
-                // Consequently, our program needs to update these changes in our database.
-    			// It rarely happens, but it could occur occasionally.
-                // We need to control these changes.
+    			// Some entities that are not yet n the database could have been modified lately due to some changes 
+    			// in quarterly company reports, before being treated by our program.
+    			// The consequence of a update is that the attribute names change.
+                // As a result we need to take this into consideration. Our program should control 
+    			// these attribute changes before introducing the new records in our database.
+    			// It barely happens, but it could occur.
+                
     			
     			for (int j = 11; j < 20 && url_ixbrl == "NULL"; j++) {
 
@@ -191,7 +201,7 @@ public class Scraper {
 		
 	/**
 	 * We need to check the website availability when we connect to it.
-	 * This function gets the status code of the response.
+	 * This function gets the response status code.
 	 * 
 	 * <ul>
 	 * 		<li>	200 = OK.						</li>
@@ -232,7 +242,7 @@ public class Scraper {
 	 * 
 	 * @param connectionCode (int)
 	 * 
-	 * @return The meaning of the connection code (String).
+	 * @return Connection code states the connection result meaning (String).
 	 * 
 	 * @throws IOException
 	 */
@@ -263,11 +273,11 @@ public class Scraper {
 	}
 	
 	/**
-	 * The method that returns a Document with the HTML content of the web.
-	 * It allows the application of JSoup methods on it.
-	 * Attention! If in a hundred seconds HTML is not detected, the connection must be checked!
+	 * The method  returns a DOM TREE Document .
+	 * It uses the JSoup Library on it.
+	 * Attention! The respose expiration time is a hundred of seconds. After that, the connection must be double-checked!
 	 * 
-	 * @param webURL - Text string with the URL of the web page.
+	 * @param webURL -Web page URL.
 	 * @return Document HTML.
 	 * 
 	 * @throws IOException
