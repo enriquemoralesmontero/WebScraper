@@ -28,10 +28,10 @@ public class MainLauncher {
 	 * 
 	 * This functionality aim is the addition of the new data from the CNMV website (<a href="http://cnmv.es/Portal/Consultas/IFI/ListaIFI.aspx?XBRL=S">link here</a>).
 	 * The first time the process is executed, all the information is collected.
-	 * The subsequent executions only retrieve the new data, only  new registries are collected and saved.
+	 * The subsequent executions only retrieve the new data, only new registries are collected and saved.
 	 * The program goes through a registry list (HTML table) in the CNMV website.
 	 * We go through the website list from the newest rows in the table to the oldest.
-	 * The scraper stops the web crawling as the first registry in the database match with the next registry readed from the website.
+	 * The scraper stops the web crawling as the first registry in the database match with the next registry read from the website.
 	 * Conversely, if the database is empty, the function ignores this step due to the fact that we need to gather whole data.
 	 * 
 	 * It follows some steps:
@@ -84,11 +84,11 @@ public class MainLauncher {
 		//
 		// In order to inform about our progress, we list the new data row by row on the console.
 		// Only if there are new data available.
-		// In other case we skip this step.
+		// In another case, we skip this step.
 		
 		System.out.println("\n\n · New registries in CNMV: " + list.size() + "\n");
 		
-		// it checks whether the list contains records.
+		// It checks whether the list contains records.
 		if (list.size() > 0) {						
 			
 			// Loop to show all the data in the list.
@@ -99,11 +99,12 @@ public class MainLauncher {
 			
 			// 4 - Storage in the MySQL database.
 			//
-			// We store data sorted by time. Most recent records are placed at the end. Only if they are not already at the database.
+			// We store data sorted by time.
+			// Most recent records are placed at the end.
+			// Only if they are not already at the database.
 			// If we do not find new data, this process is skipped.
 			
 			System.out.println("\nInserting in the database...\n");
-			// this instruction stores the gathered data...
 			mysql.store(list);	
 		}	
 		

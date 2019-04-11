@@ -162,8 +162,7 @@ public class DataBaseManager {
 	
 	/**
 	 * The function that collects the last url_info_context stored in the database.
-	 * We use this method, and we gather the most recent registry to avoid going through the complete CNMV information because we stop as soon as
-	 *  the information match with a row of information in the summary quarterly reports table on the web site.
+	 * We use this method, and we gather the most recent registry to avoid going through the complete CNMV information because we stop as soon as the information match with a row of information in the summary quarterly reports table on the web site.
 	 * In doing so, we dramatically improve the performance of our program in case we deal with a bigger amount of data.
 	 * 
 	 * @return An String (last url_info_context).
@@ -215,8 +214,8 @@ public class DataBaseManager {
 	}
 
 	/**
-	 * Procedure that stores in the database new reports placed on the CNMV website. 
-	 * We  store this neew records in a list.
+	 * A procedure that stores in the database new reports placed on the CNMV website. 
+	 * We store this new records in a list.
 	 * 
 	 * @param list - ArrayList with the new data.
 	 * @see DataBaseManager#openConection() openConection() - Necessary method.

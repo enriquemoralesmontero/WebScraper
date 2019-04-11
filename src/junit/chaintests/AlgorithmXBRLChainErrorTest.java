@@ -20,7 +20,8 @@ public class AlgorithmXBRLChainErrorTest {
 	public void testGenerateSHA3_256() {
 		
 		/**
-		 * The URL report origin is XBRLchain. It contains mistakes on purpose  to run the test.
+		 * The URL report origin is XBRLchain.
+		 * It contains mistakes on purpose to run the test.
 		 */
 		final String url_ixbrl = "http://www.se.gov/Archives/edgar/data/1613780/000119312519094497/dbvt-20181231.xm";
 		

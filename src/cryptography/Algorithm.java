@@ -34,7 +34,8 @@ public class Algorithm {
 	final static String tempFolder = "./"; 
 	
 	/**
-	 * The function that generates the hash code (SHA3 256) from the XML. As a parameter, a URl is provided.
+	 * The function that generates the hash code (SHA3 256) from the XML.
+	 * As a parameter, a URl is provided.
 	 * It uses the library of BouncyCastle.
 	 * 
 	 * @param url_ixbrl

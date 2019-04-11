@@ -1,8 +1,6 @@
-/exceptions/
 /cryptography/
 /database/
-/errorcontrol/
 /junit/
 /launcher/
-/webscraping/
 /log/
+/webscraping/

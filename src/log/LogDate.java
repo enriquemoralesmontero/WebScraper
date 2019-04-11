@@ -20,7 +20,7 @@ public class LogDate extends Date {
 	public LogDate() {super();}
 	
 	/**
-	 * @return String. A date in a dd/MMM/yyyy format
+	 * @return String. A date in a dd/MMM/yyyy format.
 	 */
 	public String getDayMonthYear() {
 		DateFormat dateFormat = new SimpleDateFormat("dd/MMM/yyyy");
@@ -28,7 +28,7 @@ public class LogDate extends Date {
 	}
 	
 	/**
-	 * @return String . Time in HH:mm:ss format.
+	 * @return String. Time in HH:mm:ss format.
 	 */
 	public String getClockTime() {
 		DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");

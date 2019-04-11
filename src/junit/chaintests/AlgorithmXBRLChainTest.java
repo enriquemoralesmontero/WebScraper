@@ -6,7 +6,7 @@ import org.junit.Test;
 import cryptography.Algorithm;
 
 /**
- * JUnit unit test to check the hashcode generator class.
+ * JUnit unit test to check the hashcode generator.
  * 
  * @author	Enrique Morales Montero
  * @author	Javier Mora Gonzálbez (project manager)
@@ -20,7 +20,8 @@ public class AlgorithmXBRLChainTest {
 	public void testGenerateSHA3_256() {
 		
 		/**
-		 * The URL report origin is XBRLchain. We use http.
+		 * The URL report origin is XBRLchain.
+		 * We use http.
 		 */
 		final String url_ixbrl = "http://www.sec.gov/Archives/edgar/data/1613780/000119312519094497/dbvt-20181231.xml";
 		

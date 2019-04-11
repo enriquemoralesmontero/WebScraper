@@ -11,11 +11,13 @@ import webscraping.RegistryCNMV;
  *
  * The LogManager has two functions:
  * 
- * First, It works as a history record. It means that LogManager keeps information about each
- * execution in ScrapingHistory.log file .
+ * <ol>
+ * <li>It works as a historical record.
+ * It means that LogManager keeps information about each execution in ScrapingHistory.log file.</li>
  * 
- * Second, the class catch exceptions and errors. After that, it saves them in ErrorHistory.log file.
- * 
+ * <li>The class catch exceptions and errors.
+ * After that, it saves them in ErrorHistory.log file.</li>
+ * </ol>
  * 
  * @author	Enrique Morales Montero (design, development, documentation)
  * @author	Javier Mora Gonzálbez (mentor and requirements analyst)
